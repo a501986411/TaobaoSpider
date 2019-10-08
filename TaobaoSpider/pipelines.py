@@ -8,4 +8,4 @@
 
 class TaobaospiderPipeline(object):
     def process_item(self, item, spider):
-        return item
+        print('名称:', item['title'])
