@@ -10,28 +10,53 @@ Target Server Type    : MYSQL
 Target Server Version : 50726
 File Encoding         : 65001
 
-Date: 2019-10-09 13:32:13
+Date: 2019-10-09 19:55:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for etb_goods
+-- ----------------------------
+DROP TABLE IF EXISTS `etb_goods`;
+CREATE TABLE `etb_goods` (
+  `goods_id` varchar(64) NOT NULL DEFAULT '' COMMENT '商品id',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '商品详情销售详情页面地址',
+  `monthly_sales` varchar(30) DEFAULT '' COMMENT '月销量',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`goods_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='淘宝商品与详情页面url关系表';
+
+-- ----------------------------
+-- Records of etb_goods
+-- ----------------------------
+INSERT INTO `etb_goods` VALUES ('601289609578', '', '', '2019-10-09 12:50:35', '2019-10-09 17:54:18');
+INSERT INTO `etb_goods` VALUES ('604075431419', '', '', '2019-10-09 12:49:31', '2019-10-09 17:54:25');
 
 -- ----------------------------
 -- Table structure for etb_goods_log
 -- ----------------------------
 DROP TABLE IF EXISTS `etb_goods_log`;
 CREATE TABLE `etb_goods_log` (
-  `id` bigint(16) NOT NULL,
+  `id` bigint(16) NOT NULL AUTO_INCREMENT,
   `goods_id` varchar(64) NOT NULL DEFAULT '' COMMENT '淘宝商品id',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '标题',
   `monthly_sales` int(11) NOT NULL DEFAULT '0' COMMENT '月销量或者30天内销量',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_goods_id` (`goods_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品信息爬去日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='商品信息爬去日志表';
 
 -- ----------------------------
 -- Records of etb_goods_log
 -- ----------------------------
+INSERT INTO `etb_goods_log` VALUES ('2', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-09 15:25:12');
+INSERT INTO `etb_goods_log` VALUES ('3', '601289609578', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '0', '2019-10-09 15:25:15');
+INSERT INTO `etb_goods_log` VALUES ('4', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-09 15:26:02');
+INSERT INTO `etb_goods_log` VALUES ('5', '601289609578', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '0', '2019-10-09 15:26:04');
+INSERT INTO `etb_goods_log` VALUES ('6', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-09 17:06:57');
+INSERT INTO `etb_goods_log` VALUES ('7', '601289609578', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '0', '2019-10-09 17:06:59');
 
 -- ----------------------------
 -- Table structure for etb_goods_relation
@@ -51,24 +76,6 @@ CREATE TABLE `etb_goods_relation` (
 -- Records of etb_goods_relation
 -- ----------------------------
 INSERT INTO `etb_goods_relation` VALUES ('1', '1', '604075431419', '601289609578', '2019-10-09 12:49:49', '2019-10-09 12:51:07');
-
--- ----------------------------
--- Table structure for etb_goods_url
--- ----------------------------
-DROP TABLE IF EXISTS `etb_goods_url`;
-CREATE TABLE `etb_goods_url` (
-  `goods_id` varchar(64) NOT NULL DEFAULT '' COMMENT '商品id',
-  `url` varchar(255) NOT NULL DEFAULT '' COMMENT '商品详情销售详情页面地址',
-  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`goods_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='淘宝商品与详情页面url关系表';
-
--- ----------------------------
--- Records of etb_goods_url
--- ----------------------------
-INSERT INTO `etb_goods_url` VALUES ('601289609578', 'https://detail.tmall.com/item.htm?spm=a230r.1.14.39.4f6b3547vNtrST&id=601289609578&ns=1&abbucket=6', '2019-10-09 12:50:35', '2019-10-09 12:50:46');
-INSERT INTO `etb_goods_url` VALUES ('604075431419', 'https://item.taobao.com/item.htm?spm=a2oq0.12575281.0.0.25911debe483LR&ft=t&id=604075431419', '2019-10-09 12:49:31', '2019-10-09 12:50:50');
 
 -- ----------------------------
 -- Table structure for etb_user
