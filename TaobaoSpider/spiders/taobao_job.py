@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import pymysql
-from langconv import *
-import sys
 from TaobaoSpider.items import TaobaospiderItem
-
+from langconv import *
 class TaobaoJobSpider(scrapy.Spider):
     # 定义爬虫名称
     name = 'taobao_job'
@@ -21,23 +19,23 @@ class TaobaoJobSpider(scrapy.Spider):
         self.db = pymysql.connect('localhost', 'root', 'root', 'easy_taobao')
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         self.goods_id = self.getGoodsId()
-        # url = "https://www.taobao.com/list/item-amp/"+self.goods_id[0]+".htm"
-        url = "https://www.taobao.com/list/item-amp/601289609578.htm"
+        g_id = self.goods_id.pop()
+        url = "https://www.taobao.com/list/item-amp/"+g_id+".htm"
         self.start_urls = [url]
-        self.goods_id_url[url] = self.goods_id[0]
-        self.goods_id.pop()
+        self.goods_id_url[url] = g_id
+
 
 
     def parse(self, response):
         item = TaobaospiderItem()
-        item['title'] = self.cht_to_chs(response.xpath('//h1/text()').extract_first())
+        item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
         item['goods_id'] = self.goods_id_url[response.url]
         monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')
         item['monthly_sales'] = monthly_sales[1]
         if len(self.goods_id) > 0:
-            next_url = "https://www.taobao.com/list/item-amp/"+self.goods_id[0]+".htm"
-            self.goods_id_url[next_url] = self.goods_id[0]
-            self.goods_id.pop()
+            next_goods_id = self.goods_id.pop()
+            next_url = "https://www.taobao.com/list/item-amp/"+next_goods_id+".htm"
+            self.goods_id_url[next_url] = next_goods_id
             yield scrapy.Request(next_url, callback=self.parse)
         yield item
 
@@ -51,17 +49,13 @@ class TaobaoJobSpider(scrapy.Spider):
         goods_id_list = []
         for row in self.cursor.fetchall():
             goods_id_list.append(row['goods_id'])
-            goods_id_list.reverse()
+        goods_id_list.reverse()
         return goods_id_list
 
-    def cht_to_chs(str):
-        """
-        中文繁体转简体
-        :return:
-        """
-        str = Converter('zh-hans').convert(str)
-        str.encode('utf-8')
-        return str
+    def tradition2simple(self,line):
+        # 将繁体转换成简体
+        line = Converter('zh-hans').convert(line)
+        return line
 
 
 

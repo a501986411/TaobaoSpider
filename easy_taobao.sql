@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50726
 File Encoding         : 65001
 
-Date: 2019-10-09 19:55:59
+Date: 2019-10-10 15:10:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,8 +31,8 @@ CREATE TABLE `etb_goods` (
 -- ----------------------------
 -- Records of etb_goods
 -- ----------------------------
-INSERT INTO `etb_goods` VALUES ('601289609578', '', '', '2019-10-09 12:50:35', '2019-10-09 17:54:18');
-INSERT INTO `etb_goods` VALUES ('604075431419', '', '', '2019-10-09 12:49:31', '2019-10-09 17:54:25');
+INSERT INTO `etb_goods` VALUES ('601289609578', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '4', '2019-10-09 12:50:35', '2019-10-10 15:05:09');
+INSERT INTO `etb_goods` VALUES ('604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-09 12:49:31', '2019-10-10 14:55:43');
 
 -- ----------------------------
 -- Table structure for etb_goods_log
@@ -46,7 +46,7 @@ CREATE TABLE `etb_goods_log` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_goods_id` (`goods_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='商品信息爬去日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COMMENT='商品信息爬去日志表';
 
 -- ----------------------------
 -- Records of etb_goods_log
@@ -57,6 +57,26 @@ INSERT INTO `etb_goods_log` VALUES ('4', '604075431419', '高腰阔腿牛仔裤�
 INSERT INTO `etb_goods_log` VALUES ('5', '601289609578', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '0', '2019-10-09 15:26:04');
 INSERT INTO `etb_goods_log` VALUES ('6', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-09 17:06:57');
 INSERT INTO `etb_goods_log` VALUES ('7', '601289609578', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '0', '2019-10-09 17:06:59');
+INSERT INTO `etb_goods_log` VALUES ('12', '604075431419', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '4', '2019-10-10 14:50:57');
+INSERT INTO `etb_goods_log` VALUES ('13', '604075431419', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '4', '2019-10-10 14:52:15');
+INSERT INTO `etb_goods_log` VALUES ('14', '604075431419', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '4', '2019-10-10 14:52:30');
+INSERT INTO `etb_goods_log` VALUES ('15', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 14:52:31');
+INSERT INTO `etb_goods_log` VALUES ('16', '604075431419', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '4', '2019-10-10 14:54:50');
+INSERT INTO `etb_goods_log` VALUES ('17', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 14:54:55');
+INSERT INTO `etb_goods_log` VALUES ('18', '604075431419', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '4', '2019-10-10 14:55:42');
+INSERT INTO `etb_goods_log` VALUES ('19', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 14:55:43');
+INSERT INTO `etb_goods_log` VALUES ('20', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 14:56:49');
+INSERT INTO `etb_goods_log` VALUES ('21', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 14:56:51');
+INSERT INTO `etb_goods_log` VALUES ('22', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 14:58:47');
+INSERT INTO `etb_goods_log` VALUES ('23', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 14:58:51');
+INSERT INTO `etb_goods_log` VALUES ('24', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 14:59:34');
+INSERT INTO `etb_goods_log` VALUES ('25', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 14:59:35');
+INSERT INTO `etb_goods_log` VALUES ('26', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 15:00:07');
+INSERT INTO `etb_goods_log` VALUES ('27', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 15:00:07');
+INSERT INTO `etb_goods_log` VALUES ('28', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 15:01:20');
+INSERT INTO `etb_goods_log` VALUES ('29', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 15:01:20');
+INSERT INTO `etb_goods_log` VALUES ('30', '601289609578', '泫雅阔腿牛仔裤女高腰秋装2019新款宽松垂感直筒显瘦百搭拖地裤子', '4', '2019-10-10 15:05:09');
+INSERT INTO `etb_goods_log` VALUES ('31', '604075431419', '高腰阔腿牛仔裤女秋装2019秋季新款宽松泫雅垂感春秋直筒拖地裤子', '0', '2019-10-10 15:05:11');
 
 -- ----------------------------
 -- Table structure for etb_goods_relation

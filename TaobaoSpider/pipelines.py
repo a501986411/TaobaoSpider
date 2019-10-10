@@ -17,16 +17,20 @@ class TaobaospiderPipeline(object):
         self.cursor = self.db.cursor()
 
     def process_item(self, item, spider):
-        print(item)
-        # self.saveData(item)
+        self.save_data(item)
 
-    def saveData(self, item):
-        sql = "INSERT INTO etb_goods_log (goods_id, title) \
-               VALUES (%s, '%s')" % \
-              (item['goods_id'], item['title'])
+    def save_data(self, item):
+        sql = "INSERT INTO etb_goods_log (goods_id, title, monthly_sales) \
+               VALUES (%s, '%s', %s)" % \
+              (item['goods_id'], item['title'], item['monthly_sales'])
+        u_sql = "update etb_goods set title='%s',monthly_sales=%s where goods_id=%s" % \
+                (item['title'], item['monthly_sales'], item['goods_id'])
         try:
             # 执行sql语句
             self.cursor.execute(sql)
+            # 执行更新语句
+            self.cursor.execute(u_sql)
+
             self.db.commit()
         except:
             self.db.rollback()
