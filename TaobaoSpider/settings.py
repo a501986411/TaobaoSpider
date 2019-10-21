@@ -92,3 +92,11 @@ DEFAULT_REQUEST_HEADERS = {
     "User-Agent" : "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0",
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
 }
+
+#database config
+MYSQL_HOST = '127.0.0.1'
+MYSQL_DATABASE = 'easy_taobao'
+MYSQL_PORT = 3306
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = 'root'
+MYSQL_CHARSET = 'utf8mb4'
