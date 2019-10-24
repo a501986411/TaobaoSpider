@@ -4,6 +4,7 @@ import pymysql
 from TaobaoSpider.items import TaobaospiderItem
 from langconv import *
 class TaobaoJobSpider(scrapy.Spider):
+    handle_httpstatus_list = [404]
     # 定义爬虫名称
     name = 'taobao_job'
     #定义此爬虫允许爬取域名
@@ -27,17 +28,25 @@ class TaobaoJobSpider(scrapy.Spider):
 
 
     def parse(self, response):
-        item = TaobaospiderItem()
-        item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
-        item['goods_id'] = self.goods_id_url[response.url]
-        monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')
-        item['monthly_sales'] = monthly_sales[1]
-        if len(self.goods_id) > 0:
-            next_goods_id = self.goods_id.pop()
-            next_url = "https://www.taobao.com/list/item-amp/"+next_goods_id+".htm"
-            self.goods_id_url[next_url] = next_goods_id
-            yield scrapy.Request(next_url, callback=self.parse)
-        yield item
+        try:
+            item = TaobaospiderItem()
+            item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
+            item['goods_id'] = self.goods_id_url[response.url]
+            monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')
+            item['monthly_sales'] = monthly_sales[1]
+            if len(self.goods_id) > 0:
+                next_goods_id = self.goods_id.pop()
+                next_url = "https://www.taobao.com/list/item-amp/"+next_goods_id+".htm"
+                self.goods_id_url[next_url] = next_goods_id
+                yield scrapy.Request(next_url, callback=self.parse)
+            yield item
+        except:
+            if len(self.goods_id) > 0:
+                next_goods_id = self.goods_id.pop()
+                next_url = "https://www.taobao.com/list/item-amp/"+next_goods_id+".htm"
+                self.goods_id_url[next_url] = next_goods_id
+                yield scrapy.Request(next_url, callback=self.parse)
+
 
 
     def getGoodsId(self):
