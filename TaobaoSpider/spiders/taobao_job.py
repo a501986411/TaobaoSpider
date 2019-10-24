@@ -16,7 +16,7 @@ class TaobaoJobSpider(scrapy.Spider):
     goods_id_url = {}
     def __init__(self):
         super().__init__(scrapy.Spider)
-        self.db = pymysql.connect('127.0.0.1', 'root', 'chen19920328', 'easy_taobao')
+        self.db = pymysql.connect('127.0.0.1', 'root', 'root', 'easy_taobao')
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         self.goods_id = self.getGoodsId()
         g_id = self.goods_id.pop()
@@ -45,7 +45,7 @@ class TaobaoJobSpider(scrapy.Spider):
         获取需要爬去的url
         :return: url list
         """
-        self.cursor.execute('select goods_id from etb_goods')
+        self.cursor.execute('select goods_id from etb_goods where goods_id <> ""')
         goods_id_list = []
         for row in self.cursor.fetchall():
             goods_id_list.append(row['goods_id'])

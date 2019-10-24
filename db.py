@@ -9,6 +9,7 @@ class Db:
     db_port = ''
     db_pwd = ''
     db_charset = 'utf8'
+    db = ''
     def __init__(self):
         setting = get_project_settings()
         self.db_host = setting.get('MYSQL_HOST')
@@ -19,6 +20,9 @@ class Db:
         self.db_charset = setting.get('MYSQL_CHARSET')
 
     def get_db(self):
-        return pymysql.connect(self.db_host, self.db_port, self.db_user, self.db_pwd, self.db_database, self.db_charset)
-    def get_cursor(self):
-        return self.cursor()
+        if type(self.db) != pymysql:
+            self.db = pymysql.connect(self.db_host, self.db_port, self.db_user, self.db_pwd, self.db_database, self.db_charset)
+        return self.db
+
+    def __repr__(self):
+        return 'User[name=%s]' % self.name
