@@ -67,6 +67,6 @@ class TaobaoJobSpider(scrapy.Spider):
         return line
 
     def get_url(self, goods_id):
-        return "https://www.taobao.com/list/item/"+goods_id+".htm"
+        return "https://world.taobao.com/item/"+goods_id+".htm"
 
 

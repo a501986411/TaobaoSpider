@@ -24,8 +24,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TaobaoSpider/spiders/taobao_job.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="68" column="15" selection-start-line="68" selection-start-column="8" selection-end-line="68" selection-end-column="15" />
+            <state relative-caret-position="353">
+              <caret line="69" column="46" selection-start-line="69" selection-start-column="46" selection-end-line="69" selection-end-column="46" />
               <folding>
                 <element signature="e#24#37#0" expanded="true" />
               </folding>
@@ -223,12 +223,12 @@
       <workItem from="1571309537851" duration="938000" />
       <workItem from="1571372280702" duration="3092000" />
       <workItem from="1571631782986" duration="2960000" />
-      <workItem from="1571898899075" duration="15631000" />
+      <workItem from="1571898899075" duration="16059000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44519000" />
+    <option name="totallyTimeSpent" value="44947000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -382,8 +382,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TaobaoSpider/spiders/taobao_job.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="68" column="15" selection-start-line="68" selection-start-column="8" selection-end-line="68" selection-end-column="15" />
+        <state relative-caret-position="353">
+          <caret line="69" column="46" selection-start-line="69" selection-start-column="46" selection-end-line="69" selection-end-column="46" />
           <folding>
             <element signature="e#24#37#0" expanded="true" />
           </folding>
