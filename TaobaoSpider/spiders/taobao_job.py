@@ -21,7 +21,7 @@ class TaobaoJobSpider(scrapy.Spider):
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         self.goods_id = self.getGoodsId()
         g_id = self.goods_id.pop()
-        url = "https://www.taobao.com/list/item-amp/"+g_id+".htm"
+        url = "https://www.taobao.com/list/item/"+g_id+".htm"
         self.start_urls = [url]
         self.goods_id_url[url] = g_id
 
