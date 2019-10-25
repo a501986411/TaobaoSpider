@@ -3,6 +3,7 @@ import scrapy
 import pymysql
 from TaobaoSpider.items import TaobaospiderItem
 from langconv import *
+import json
 class TaobaoJobSpider(scrapy.Spider):
     handle_httpstatus_list = [404]
     # 定义爬虫名称
@@ -19,11 +20,8 @@ class TaobaoJobSpider(scrapy.Spider):
         super().__init__(scrapy.Spider)
         self.db = pymysql.connect('127.0.0.1', 'root', 'chen19920328', 'easy_taobao')
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
-        self.goods_id = self.getGoodsId()
-        g_id = self.goods_id.pop()
-        url = self.get_url(g_id)
-        self.start_urls = [url]
-        self.goods_id_url[url] = g_id
+        self.goods_id = self.getGoodsId() #设置所有需要爬去的商品ID
+        self.start_urls = [self.get_url()] #设置入口url
 
 
 
@@ -35,17 +33,14 @@ class TaobaoJobSpider(scrapy.Spider):
             # monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')
             monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
             item['monthly_sales'] = monthly_sales
-            if len(self.goods_id) > 0:
-                next_goods_id = self.goods_id.pop()
-                next_url = self.get_url(next_goods_id)
-                self.goods_id_url[next_url] = next_goods_id
+            item['cover_img'] = self.get_cover_img(response)
+            next_url = self.get_url()
+            if next_url:
                 yield scrapy.Request(next_url, callback=self.parse)
             yield item
         except:
-            if len(self.goods_id) > 0:
-                next_goods_id = self.goods_id.pop()
-                next_url = self.get_url(next_goods_id)
-                self.goods_id_url[next_url] = next_goods_id
+            next_url = self.get_url()
+            if next_url:
                 yield scrapy.Request(next_url, callback=self.parse)
 
 
@@ -67,7 +62,31 @@ class TaobaoJobSpider(scrapy.Spider):
         line = Converter('zh-hans').convert(line)
         return line
 
-    def get_url(self, goods_id):
-        return "https://world.taobao.com/item/"+goods_id+".htm"
+    def get_url(self):
+        """
+        获取需要爬去的url
+        :return: url
+        """
+        next_url = ''
+        if len(self.goods_id) > 0:
+            next_goods_id = self.goods_id.pop()
+            next_url = "https://world.taobao.com/item/"+next_goods_id+".htm"
+            self.goods_id_url[next_url] = next_goods_id
+        return next_url
+
+
+    def get_cover_img(self, response):
+        res = response.xpath("//script/text()").extract()
+        for item in res:
+            try:
+                item = json.loads(item)
+                if isinstance(item, dict):
+                    if '@type' in item:
+                        if item['@type'] == 'Product':
+                            return item['image'][0]
+            except:
+                continue
+        return ''
+
 
 

@@ -16,4 +16,6 @@ class TaobaospiderItem(scrapy.Item):
     goods_id = scrapy.Field()
     #月销量
     monthly_sales = scrapy.Field()
+    #首图
+    cover_img = scrapy.Field()
     pass
