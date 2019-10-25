@@ -21,7 +21,7 @@ class TaobaoJobSpider(scrapy.Spider):
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         self.goods_id = self.getGoodsId()
         g_id = self.goods_id.pop()
-        url = "https://www.taobao.com/list/item/"+g_id+".htm"
+        url = self.get_url(g_id)
         self.start_urls = [url]
         self.goods_id_url[url] = g_id
 
@@ -36,14 +36,14 @@ class TaobaoJobSpider(scrapy.Spider):
             item['monthly_sales'] = monthly_sales[1]
             if len(self.goods_id) > 0:
                 next_goods_id = self.goods_id.pop()
-                next_url = "https://www.taobao.com/list/item-amp/"+next_goods_id+".htm"
+                next_url = self.get_url(next_goods_id)
                 self.goods_id_url[next_url] = next_goods_id
                 yield scrapy.Request(next_url, callback=self.parse)
             yield item
         except:
             if len(self.goods_id) > 0:
                 next_goods_id = self.goods_id.pop()
-                next_url = "https://www.taobao.com/list/item-amp/"+next_goods_id+".htm"
+                next_url = self.get_url(next_goods_id)
                 self.goods_id_url[next_url] = next_goods_id
                 yield scrapy.Request(next_url, callback=self.parse)
 
@@ -66,5 +66,7 @@ class TaobaoJobSpider(scrapy.Spider):
         line = Converter('zh-hans').convert(line)
         return line
 
+    def get_url(self, goods_id):
+        return "https://www.taobao.com/list/item/"+goods_id+".htm"
 
 
