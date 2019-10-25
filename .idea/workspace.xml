@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ee548ab0-4829-49dd-a044-e4e6e7132ff2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TaobaoSpider/pipelines.py" beforeDir="false" afterPath="$PROJECT_DIR$/TaobaoSpider/pipelines.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TaobaoSpider/spiders/taobao_job.py" beforeDir="false" afterPath="$PROJECT_DIR$/TaobaoSpider/spiders/taobao_job.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -12,20 +14,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TaobaoSpider/pipelines.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="230">
-              <caret line="15" column="68" selection-start-line="15" selection-start-column="56" selection-end-line="15" selection-end-column="68" />
+            <state relative-caret-position="138">
+              <caret line="26" column="72" selection-start-line="26" selection-start-column="72" selection-end-line="26" selection-end-column="72" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TaobaoSpider/spiders/taobao_job.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="353">
-              <caret line="69" column="46" selection-start-line="69" selection-start-column="46" selection-end-line="69" selection-end-column="46" />
+            <state relative-caret-position="330">
+              <caret line="35" column="95" selection-start-line="35" selection-start-column="95" selection-end-line="35" selection-end-column="95" />
               <folding>
                 <element signature="e#24#37#0" expanded="true" />
               </folding>
@@ -139,8 +141,8 @@
         <option value="$PROJECT_DIR$/TaobaoSpider/db.py" />
         <option value="$PROJECT_DIR$/db.py" />
         <option value="$PROJECT_DIR$/TaobaoSpider/settings.py" />
-        <option value="$PROJECT_DIR$/TaobaoSpider/pipelines.py" />
         <option value="$PROJECT_DIR$/TaobaoSpider/spiders/taobao_job.py" />
+        <option value="$PROJECT_DIR$/TaobaoSpider/pipelines.py" />
       </list>
     </option>
   </component>
@@ -223,12 +225,12 @@
       <workItem from="1571309537851" duration="938000" />
       <workItem from="1571372280702" duration="3092000" />
       <workItem from="1571631782986" duration="2960000" />
-      <workItem from="1571898899075" duration="16059000" />
+      <workItem from="1571898899075" duration="16736000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44947000" />
+    <option name="totallyTimeSpent" value="45624000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -248,7 +250,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.3295082" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.3409836" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.3409836" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.3295082" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -366,13 +368,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TaobaoSpider/pipelines.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="15" column="68" selection-start-line="15" selection-start-column="56" selection-end-line="15" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TaobaoSpider/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-115">
@@ -382,11 +377,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TaobaoSpider/spiders/taobao_job.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="69" column="46" selection-start-line="69" selection-start-column="46" selection-end-line="69" selection-end-column="46" />
+        <state relative-caret-position="330">
+          <caret line="35" column="95" selection-start-line="35" selection-start-column="95" selection-end-line="35" selection-end-column="95" />
           <folding>
             <element signature="e#24#37#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TaobaoSpider/pipelines.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="26" column="72" selection-start-line="26" selection-start-column="72" selection-end-line="26" selection-end-column="72" />
         </state>
       </provider>
     </entry>

@@ -32,7 +32,8 @@ class TaobaoJobSpider(scrapy.Spider):
             item = TaobaospiderItem()
             item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
             item['goods_id'] = self.goods_id_url[response.url]
-            monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')
+            # monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')
+            monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
             item['monthly_sales'] = monthly_sales[1]
             if len(self.goods_id) > 0:
                 next_goods_id = self.goods_id.pop()
