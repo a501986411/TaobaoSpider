@@ -14,7 +14,7 @@ class TaobaospiderPipeline(object):
     cursor = ''
     def __init__(self):
         self.db = pymysql.connect('localhost', 'root', 'chen19920328', 'easy_taobao')
-        self.cursor = self.db.cursor()
+        self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
 
     def process_item(self, item, spider):
         self.save_data(item)
@@ -34,4 +34,7 @@ class TaobaospiderPipeline(object):
             self.db.commit()
         except:
             self.db.rollback()
+
+
+
 
