@@ -57,12 +57,18 @@ class TaobaoJobSpider(scrapy.Spider):
             item['cover_img'] = self.get_cover_img(response)
             next_url = self.get_url()
             if next_url:
-                yield scrapy.Request(next_url, headers={"User-Agent": choice(self.user_agent_list)}, callback=self.parse)
+                yield scrapy.Request(next_url, meta={
+                 'dont_redirect': True,
+                 'handle_httpstatus_list': [302]
+                }, headers={"User-Agent": choice(self.user_agent_list)}, callback=self.parse)
             yield item
         except:
             next_url = self.get_url()
             if next_url:
-                yield scrapy.Request(next_url, headers={"User-Agent": choice(self.user_agent_list)}, callback=self.parse)
+                yield scrapy.Request(next_url,meta={
+                 'dont_redirect': True,
+                 'handle_httpstatus_list': [302]
+                },  headers={"User-Agent": choice(self.user_agent_list)}, callback=self.parse)
 
 
 
