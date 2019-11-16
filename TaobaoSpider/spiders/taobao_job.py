@@ -60,7 +60,7 @@ class TaobaoJobSpider(scrapy.Spider):
                 yield scrapy.Request(next_url, meta={
                  'dont_redirect': True,
                  'handle_httpstatus_list': [302]
-                }, headers={"User-Agent": choice(self.user_agent_list)}, callback=self.parse)
+                }, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36"}, callback=self.parse)
             yield item
         except:
             next_url = self.get_url()
@@ -68,7 +68,7 @@ class TaobaoJobSpider(scrapy.Spider):
                 yield scrapy.Request(next_url,meta={
                  'dont_redirect': True,
                  'handle_httpstatus_list': [302]
-                },  headers={"User-Agent": choice(self.user_agent_list)}, callback=self.parse)
+                },  headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36"}, callback=self.parse)
 
 
 
