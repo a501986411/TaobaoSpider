@@ -93,6 +93,7 @@ class TaobaoJobSpider(scrapy.Spider):
             next_goods_id = self.goods_id.pop()
             next_url = "https://world.taobao.com/item/"+next_goods_id+".htm"
             self.goods_id_url[next_url] = next_goods_id
+            print(next_url)
         return next_url
 
 
