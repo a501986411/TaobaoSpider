@@ -118,7 +118,7 @@ class ProxyMiddleware(object):
 
     def get_proxy_ip(self, proxy):
 
-        proxies = {"https": proxy}
+        proxies = {"http": proxy}
         response = requests.get('http://www.baidu.com', proxies=proxies, timeout=2)
         if response.status_code == 200:
             return proxy
