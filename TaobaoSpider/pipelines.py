@@ -17,6 +17,8 @@ class TaobaospiderPipeline(object):
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
 
     def process_item(self, item, spider):
+        print("获得的数据:")
+        print(item)
         self.save_data(item)
 
     def save_data(self, item):
