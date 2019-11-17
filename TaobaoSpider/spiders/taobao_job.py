@@ -76,7 +76,7 @@ class TaobaoJobSpider(scrapy.Spider):
                     "sec-fetch-site":"none",
                     "sec-fetch-user":"?1",
                     "upgrade-insecure-requests":"1",
-                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36"
+                    "user-agent":choice(self.user_agent_list)
                 }, callback=self.parse)
             yield item
         except:
@@ -85,7 +85,23 @@ class TaobaoJobSpider(scrapy.Spider):
                 yield scrapy.Request(next_url,meta={
                  'dont_redirect': True,
                  'handle_httpstatus_list': [302]
-                },  headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36"}, callback=self.parse)
+                },  headers={
+                    "authority": "world.taobao.com",
+                    "method": "GET",
+                    "path": "/item/537493777173.htm",
+                    "scheme": "https",
+                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+                    "accept-encoding":"gzip, deflate, br",
+                    "accept-language":"zh-CN,zh;q=0.9",
+                    "cache-control":"max-age=0",
+                    "cookie":"thw=cn; t=c2e8b7acdacb20ae46d289e041bb78e8; ali_ab=113.66.108.236.1568125226322.0; hng=CN%7Czh-CN%7CCNY%7C156; x=e%3D1%26p%3D*%26s%3D0%26c%3D0%26f%3D0%26g%3D0%26t%3D0%26__ll%3D-1%26_ato%3D0; everywhere_service_strategy=cco_busi:ads_crmwx_wanxiang_guard_crowd:20191007@1; cna=A5/+FQupT2gCAdoTZXW8xTLd; lgc=q7601086; tracknick=q7601086; tg=0; enc=lTBoFEEtynkBcT6ftC8mD7dZmnuFb1TpsSAWsKfd3J0%2Fu%2Fy9aUDP6Tpu7ZoSGPQgLEEGXqqyS8cheOg2yJ5c9Q%3D%3D; cookie2=1c0420fdcc8184bbffebd5a0c45fb1c2; _tb_token_=738beee13b357; v=0; _m_h5_tk=588cec1822ae35a104383acb771e28ab_1573927407905; _m_h5_tk_enc=0b490a55254afefd3f3ee5944f83afe5; unb=890883777; cookie17=W8CN4aYihwvL; dnk=q7601086; _l_g_=Ug%3D%3D; sg=678; _nk_=q7601086; cookie1=ACzhCrlgLybrjbDxXunwXZW%2FtM989GOO%2BOlhaItgeXQ%3D; mt=ci=20_1; uc3=vt3=F8dByuWi4LRGyx2Hgbo%3D&nk2=EqLIKlQ5ROM%3D&lg2=VT5L2FSpMGV7TQ%3D%3D&id2=W8CN4aYihwvL; csg=244b8d63; skt=2578c1cb8c3a507d; existShop=MTU3MzkyMTEzNg%3D%3D; uc4=nk4=0%40EN0Di5EJ%2FxSwpTx8ChGdjr05IA%3D%3D&id4=0%40WeNXGMCJNk5pqDCo%2FgVe%2BKPjGXo%3D; _cc_=WqG3DMC9EA%3D%3D; uc1=cookie16=UIHiLt3xCS3yM2h4eKHS9lpEOw%3D%3D&cookie21=URm48syIZJfmZ9wVCtpzEQ%3D%3D&cookie15=Vq8l%2BKCLz3%2F65A%3D%3D&existShop=true&pas=0&cookie14=UoTbnrFqlHLZtg%3D%3D&tag=8&lng=zh_CN; l=dBE85h6eqwe32LcbKOCanurza77OSIRYYuPzaNbMi_5BT6T6eqbOkKL2yF96VjW5TsYB47_ypV99-etkZ8IZm1pCOGJ7xUvb4bLe4; isg=BMXFMcxTNJQRnxDvhthRMiOm1AE_Knh8-8XmfscqhfwLXuXQj9ZQ5LU8bMINHpHM",
+                    "if-none-match":'W/"1355c-+P/4Qa6zZf6pyESXPOmUAW4zfEw"',
+                    "sec-fetch-mode":"navigate",
+                    "sec-fetch-site":"none",
+                    "sec-fetch-user":"?1",
+                    "upgrade-insecure-requests":"1",
+                    "user-agent":choice(self.user_agent_list)
+                }, callback=self.parse)
 
 
 
