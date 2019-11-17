@@ -127,14 +127,14 @@ class ProxyMiddleware(object):
     ]
 
     def get_proxy_ip(self, proxy):
-        proxies = {"http": proxy}
+        proxies = {"https": proxy}
         response = requests.get('http://www.baidu.com', proxies=proxies, timeout=2)
         if response.status_code != 200:
             return proxy
         return False
 
-
-
+    def process_request(self, request, spider):
+        proxys = self.valVer()
 
     def process_request(self,request,spider):
         proxy = self.get_proxy_ip(choice(self.proxys))
