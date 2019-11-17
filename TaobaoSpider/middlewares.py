@@ -134,7 +134,7 @@ class ProxyMiddleware(object):
             try:
                 proxy_host = proxy
                 protocol = 'https' if 'https' in proxy_host else 'http'
-                proxies = {protocol: proxy_host}
+                proxies = {protocol: proxy['ip'] + ":" + str(proxy['port'])}
                 response = requests.get('http://www.baidu.com', proxies=proxies, timeout=2)
                 if response.status_code != 200:
                     badNum += 1
@@ -158,6 +158,6 @@ class ProxyMiddleware(object):
 
         proxy = choice(proxys)
         if request.url.startswith("http://"):
-            request.meta['proxy']="http://"+ proxy['ip'] + ":" + str(proxy['port'])
+            request.meta['proxy']="http://"+ proxy
         elif request.url.startswith("https://"):
-            request.meta['proxy']="https://"+ proxy['ip'] + ":" + str(proxy['port'])
+            request.meta['proxy']="https://"+ proxy
