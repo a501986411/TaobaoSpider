@@ -133,10 +133,6 @@ class ProxyMiddleware(object):
         if response.status_code == 200:
             return proxy
         return False
-
-    def process_request(self, request, spider):
-        proxys = self.valVer()
-
     def process_request(self,request,spider):
         proxy = self.get_proxy_ip(choice(self.proxys))
         if proxy == False:
