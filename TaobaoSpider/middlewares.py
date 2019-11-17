@@ -6,7 +6,7 @@
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+from random import choice
 
 class TaobaospiderSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -104,7 +104,30 @@ class TaobaospiderDownloaderMiddleware(object):
 
 class ProxyMiddleware(object):
     def process_request(self,request,spider):
+        proxys = [
+            {"ip":"58.218.200.253","port":7031,"outip":"183.252.126.66"},
+            {"ip":"58.218.200.253","port":6288,"outip":"103.40.223.204"},
+            {"ip":"58.218.201.114","port":6523,"outip":"223.64.7.107"},
+            {"ip":"58.218.200.253","port":8474,"outip":"122.226.158.132"},
+            {"ip":"58.218.200.253","port":7759,"outip":"112.0.15.220"},
+            {"ip":"58.218.201.74","port":8432,"outip":"120.83.116.190"},
+            {"ip":"58.218.200.253","port":8243,"outip":"111.41.245.236"},
+            {"ip":"58.218.201.114","port":4855,"outip":"120.239.50.255"},
+            {"ip":"58.218.200.253","port":3101,"outip":"183.251.186.73"},
+            {"ip":"58.218.200.214","port":8411,"outip":"117.27.20.43"},
+            {"ip":"58.218.201.114","port":5593,"outip":"111.0.181.24"},
+            {"ip":"58.218.201.122","port":6600,"outip":"110.52.94.255"},
+            {"ip":"58.218.201.114","port":9056,"outip":"111.41.22.138"},
+            {"ip":"58.218.201.74","port":7840,"outip":"101.17.140.15"},
+            {"ip":"58.218.201.74","port":3707,"outip":"60.9.218.144"},
+            {"ip":"58.218.200.253","port":6426,"outip":"112.10.70.235"},
+            {"ip":"58.218.201.74","port":3631,"outip":"175.44.8.43"},
+            {"ip":"58.218.201.114","port":8843,"outip":"183.251.120.43"},
+            {"ip":"58.218.200.214","port":8349,"outip":"223.247.86.228"},
+            {"ip":"58.218.200.214","port":5603,"outip":"115.203.83.5"}
+        ]
+        proxy = choice(proxys)
         if request.url.startswith("http://"):
-            request.meta['proxy']="http://"+'58.218.200.253:7031'          # http代理
+            request.meta['proxy']="http://"+ proxy['ip'] + ":" + proxy['port']          # http代理
         elif request.url.startswith("https://"):
-            request.meta['proxy']="https://"+'58.218.200.253:7031'         # https代理
+            request.meta['proxy']="https://"+ proxy['ip'] + ":" + proxy['port']        # https代理
