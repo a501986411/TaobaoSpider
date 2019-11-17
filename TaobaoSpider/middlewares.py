@@ -103,60 +103,43 @@ class TaobaospiderDownloaderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 class ProxyMiddleware(object):
+    proxys = [
+        "112.114.89.246:4532",
+        "58.252.201.126:4525",
+        "180.116.168.57:4576",
+        "140.237.162.184:4554",
+        "182.111.93.100:4573",
+        "182.244.169.106:4565",
+        "117.60.45.20:4521",
+        "220.165.155.71:4532",
+        "113.76.63.107:4572",
+        "183.166.161.14:4526",
+        "113.100.85.150:4583",
+        "220.176.65.169:4543",
+        "117.90.191.207:4507",
+        "117.90.74.73:4507",
+        "122.237.182.130:4575",
+        "163.179.205.134:4561",
+        "112.114.131.7:4528",
+        "117.63.26.239:4575",
+        "117.91.131.32:4545",
+        "106.35.35.74:4554"
+    ]
 
-    def valVer(self):
-        proxys =[
-                "112.114.89.246:4532",
-                "58.252.201.126:4525",
-                "180.116.168.57:4576",
-                "140.237.162.184:4554",
-                "182.111.93.100:4573",
-                "182.244.169.106:4565",
-                "117.60.45.20:4521",
-                "220.165.155.71:4532",
-                "113.76.63.107:4572",
-                "183.166.161.14:4526",
-                "113.100.85.150:4583",
-                "220.176.65.169:4543",
-                "117.90.191.207:4507",
-                "117.90.74.73:4507",
-                "122.237.182.130:4575",
-                "163.179.205.134:4561",
-                "112.114.131.7:4528",
-                "117.63.26.239:4575",
-                "117.91.131.32:4545",
-                "106.35.35.74:4554"
-        ]
-        badNum = 0
-        goodNum = 0
-        good = []
-        for proxy in proxys:
-            try:
-                proxy_host = proxy
-                protocol = 'https' if 'https' in proxy_host else 'http'
-                proxies = {protocol: proxy}
-                response = requests.get('http://www.baidu.com', proxies=proxies, timeout=2)
-                if response.status_code != 200:
-                    badNum += 1
-                    print(proxy_host, 'bad proxy')
-                else:
-                    goodNum += 1
-                    good.append(proxies)
-                    print(proxy_host, 'success proxy')
-            except Exception as e:
-                print(e)
-                # print proxy_host, 'bad proxy'
-                badNum += 1
-                continue
-        print('success proxy num : ', goodNum)
-        print('bad proxy num : ', badNum)
-        return good
+    def get_proxy_ip(self, proxy):
+        proxies = {"http": proxy}
+        response = requests.get('http://www.baidu.com', proxies=proxies, timeout=2)
+        if response.status_code != 200:
+            return proxy
+        return False
+
+
 
 
     def process_request(self,request,spider):
-        proxys = self.valVer()
-
-        proxy = choice(proxys)
+        proxy = self.get_proxy_ip(choice(self.proxys))
+        if proxy == False:
+            proxy = self.get_proxy_ip(choice(self.proxys))
         print("使用的IP:", proxy)
         if request.url.startswith("http://"):
             request.meta['proxy']="http://"+ str(proxy['http'])
