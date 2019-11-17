@@ -76,7 +76,7 @@ class TaobaoJobSpider(scrapy.Spider):
                     "sec-fetch-site":"none",
                     "sec-fetch-user":"?1",
                     "upgrade-insecure-requests":"1",
-                    "user-agent":choice(self.user_agent_list)
+                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
                 }, callback=self.parse)
             yield item
         except:
@@ -100,7 +100,7 @@ class TaobaoJobSpider(scrapy.Spider):
                     "sec-fetch-site":"none",
                     "sec-fetch-user":"?1",
                     "upgrade-insecure-requests":"1",
-                    "user-agent":choice(self.user_agent_list)
+                    "user-agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
                 }, callback=self.parse)
 
 
