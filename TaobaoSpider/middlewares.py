@@ -101,3 +101,10 @@ class TaobaospiderDownloaderMiddleware(object):
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+class ProxyMiddleware(object):
+    def process_request(self,request,spider):
+        if request.url.startswith("http://"):
+            request.meta['proxy']="http://"+'58.218.200.253:7031'          # http代理
+        elif request.url.startswith("https://"):
+            request.meta['proxy']="https://"+'58.218.200.253:7031'         # https代理
