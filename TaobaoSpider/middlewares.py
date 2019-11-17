@@ -155,7 +155,7 @@ class ProxyMiddleware(object):
 
     def process_request(self,request,spider):
         proxys = self.valVer()
-        
+
         proxy = choice(proxys)
         if request.url.startswith("http://"):
             request.meta['proxy']="http://"+ proxy['ip'] + ":" + str(proxy['port'])
