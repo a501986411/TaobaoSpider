@@ -127,8 +127,7 @@ class ProxyMiddleware(object):
             {"ip":"58.218.200.214","port":5603,"outip":"115.203.83.5"}
         ]
         proxy = choice(proxys)
-        print(proxy)
         if request.url.startswith("http://"):
-            request.meta['proxy']="http://"+ proxy['ip'] + ":" + proxy['port']          # http代理
+            request.meta['proxy']="http://"+ proxy['ip'] + ":" + str(proxy['port'])
         elif request.url.startswith("https://"):
-            request.meta['proxy']="https://"+ proxy['ip'] + ":" + proxy['port']        # https代理
+            request.meta['proxy']="https://"+ proxy['ip'] + ":" + str(proxy['port'])
