@@ -142,6 +142,6 @@ class ProxyMiddleware(object):
             proxy = self.get_proxy_ip(choice(self.proxys))
         print("使用的IP:", proxy)
         if request.url.startswith("http://"):
-            request.meta['proxy']="http://"+ str(proxy['http'])
+            request.meta['proxy']="http://"+ str(proxy)
         elif request.url.startswith("https://"):
-            request.meta['proxy']="https://"+ str(proxy['http'])
+            request.meta['proxy']="https://"+ str(proxy)
