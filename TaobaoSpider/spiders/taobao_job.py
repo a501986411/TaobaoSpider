@@ -62,7 +62,6 @@ class TaobaoJobSpider(scrapy.Spider):
             # item['monthly_sales'] = monthly_sales
             # item['cover_img'] = self.get_cover_img(response)
             item = self.get_item_for_list_amp()
-            print(item)
             next_url = self.get_url()
             if next_url:
                 yield scrapy.Request(next_url,
@@ -108,6 +107,7 @@ class TaobaoJobSpider(scrapy.Spider):
             next_goods_id = self.goods_id.pop()
             next_url = choice(self.url_prefix) % (str(next_goods_id))
             self.goods_id_url[next_url] = next_goods_id
+        return "https://www.taobao.com/list/item-amp/600046114811.htm"
         return next_url
 
 
