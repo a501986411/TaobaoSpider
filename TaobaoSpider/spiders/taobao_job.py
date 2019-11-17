@@ -48,7 +48,6 @@ class TaobaoJobSpider(scrapy.Spider):
 
     def parse(self, response):
         self.getPorxy()
-        sys.exit(0)
         try:
             item = TaobaospiderItem()
             item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
