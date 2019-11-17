@@ -158,6 +158,6 @@ class ProxyMiddleware(object):
 
         proxy = choice(proxys)
         if request.url.startswith("http://"):
-            request.meta['proxy']="http://"+ proxy
+            request.meta['proxy']="http://"+ str(proxy)
         elif request.url.startswith("https://"):
-            request.meta['proxy']="https://"+ proxy
+            request.meta['proxy']="https://"+ str(proxy)
