@@ -132,3 +132,5 @@ class ProxyMiddleware(object):
             request.meta['proxy']="http://"+ str(proxy)
         elif request.url.startswith("https://"):
             request.meta['proxy']="https://"+ str(proxy)
+        request.meta['dont_redirect'] = True
+        request.meta['handle_httpstatus_list'] = [302]
