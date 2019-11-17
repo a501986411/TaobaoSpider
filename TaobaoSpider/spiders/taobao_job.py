@@ -47,6 +47,8 @@ class TaobaoJobSpider(scrapy.Spider):
 
 
     def parse(self, response):
+        self.getPorxy()
+        sys.exit();
         try:
             item = TaobaospiderItem()
             item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
@@ -149,5 +151,9 @@ class TaobaoJobSpider(scrapy.Spider):
                 continue
         return ''
 
+    def getPorxy(self):
+        url = "http://http.tiqu.alicdns.com/getip3?num=20&type=2&pro=&city=0&yys=0&port=1&pack=72703&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=2&regions=";
+        res = scrapy.Request(url)
+        print(res)
 
 
