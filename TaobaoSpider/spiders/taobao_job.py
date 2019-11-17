@@ -62,19 +62,6 @@ class TaobaoJobSpider(scrapy.Spider):
                  'handle_httpstatus_list': [302]
                 },
                  headers={
-                    "authority": "world.taobao.com",
-                    "method": "GET",
-                    "path": "/item/537493777173.htm",
-                    "scheme": "https",
-                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
-                    "accept-encoding":"gzip, deflate, br",
-                    "accept-language":"zh-CN,zh;q=0.9",
-                    "cache-control":"max-age=0",
-                    "if-none-match":'W/"1355c-+P/4Qa6zZf6pyESXPOmUAW4zfEw"',
-                    "sec-fetch-mode":"navigate",
-                    "sec-fetch-site":"none",
-                    "sec-fetch-user":"?1",
-                    "upgrade-insecure-requests":"1",
                     "user-agent":choice(self.user_agent_list)
                 }, callback=self.parse)
             yield item
@@ -85,19 +72,6 @@ class TaobaoJobSpider(scrapy.Spider):
                  'dont_redirect': True,
                  'handle_httpstatus_list': [302]
                 },  headers={
-                    "authority": "world.taobao.com",
-                    "method": "GET",
-                    "path": "/item/537493777173.htm",
-                    "scheme": "https",
-                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
-                    "accept-encoding":"gzip, deflate, br",
-                    "accept-language":"zh-CN,zh;q=0.9",
-                    "cache-control":"max-age=0",
-                    "if-none-match":'W/"1355c-+P/4Qa6zZf6pyESXPOmUAW4zfEw"',
-                    "sec-fetch-mode":"navigate",
-                    "sec-fetch-site":"none",
-                    "sec-fetch-user":"?1",
-                    "upgrade-insecure-requests":"1",
                     "user-agent":choice(self.user_agent_list)
                 }, callback=self.parse)
 
