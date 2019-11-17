@@ -157,6 +157,7 @@ class ProxyMiddleware(object):
         proxys = self.valVer()
 
         proxy = choice(proxys)
+        print("使用的IP:", proxy)
         if request.url.startswith("http://"):
             request.meta['proxy']="http://"+ str(proxy)
         elif request.url.startswith("https://"):
