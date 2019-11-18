@@ -107,7 +107,7 @@ class TaobaoJobSpider(scrapy.Spider):
         next_url = ''
         if len(self.goods_id) > 0:
             next_goods_id = self.goods_id.pop()
-            if(self.goods_type[next_goods_id] == 1):
+            if self.goods_type[next_goods_id] == 1:
                 next_url = choice(self.url_prefix) % (str(next_goods_id))
             else:
                 next_url = choice(self.taobao_url_prefix) % (str(next_goods_id))
