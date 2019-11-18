@@ -112,6 +112,7 @@ class TaobaoJobSpider(scrapy.Spider):
             else:
                 next_url = choice(self.taobao_url_prefix) % (str(next_goods_id))
             self.goods_id_url[next_url] = next_goods_id
+        logging.debug(next_url)
         return next_url
 
 
