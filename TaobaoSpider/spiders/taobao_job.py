@@ -105,6 +105,7 @@ class TaobaoJobSpider(scrapy.Spider):
 
 
     def get_cover_img(self, response):
+        info = {}
         res = response.xpath("//script/text()").extract()
         for item in res:
             try:
@@ -112,7 +113,9 @@ class TaobaoJobSpider(scrapy.Spider):
                 if isinstance(item, dict):
                     if '@type' in item:
                         if item['@type'] == 'Product':
-                            return item['image'][0]
+                            info['image'] = item['image'][0]
+                            info['name'] = item['name']
+                            return info
             except:
                 continue
         return ''
@@ -134,7 +137,9 @@ class TaobaoJobSpider(scrapy.Spider):
         monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')[1]
         #monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
         item['monthly_sales'] = monthly_sales
-        item['cover_img'] = self.get_cover_img(response)
+        info = self.get_cover_img(response)
+        item['cover_img'] = info['image']
+        item['title'] = info['name']
         logging.debug(item)
         return item
 
