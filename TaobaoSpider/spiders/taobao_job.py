@@ -139,7 +139,7 @@ class TaobaoJobSpider(scrapy.Spider):
         item['monthly_sales'] = monthly_sales
         info = self.get_cover_img(response)
         item['cover_img'] = info['image']
-        item['title'] = info['name']
+        item['title'] = self.tradition2simple(html.unescape(info['name']))
         logging.debug(item)
         return item
 
