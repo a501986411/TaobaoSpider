@@ -100,6 +100,7 @@ class TaobaoJobSpider(scrapy.Spider):
             next_goods_id = self.goods_id.pop()
             next_url = choice(self.url_prefix) % (str(next_goods_id))
             self.goods_id_url[next_url] = next_goods_id
+        return "https://www.taobao.com/list/item-amp/608017591336.htm"
         return next_url
 
 
