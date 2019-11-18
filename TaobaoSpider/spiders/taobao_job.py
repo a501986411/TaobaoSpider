@@ -86,6 +86,7 @@ class TaobaoJobSpider(scrapy.Spider):
         self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> "" and goods_id in (608017591336, 607732047139, 605662241470, 606559762938)')
         goods_id_list = []
         for row in self.cursor.fetchall():
+            logging.debug(self.row)
             goods_id_list.append(row['goods_id'])
             if "tmall" in row['detail_url']:
                 self.goods_type[row['goods_id']] = 1
@@ -104,7 +105,6 @@ class TaobaoJobSpider(scrapy.Spider):
         获取需要爬去的url
         :return: url
         """
-        logging.debug(self.goods_type)
         next_url = ''
         if len(self.goods_id) > 0:
             next_goods_id = self.goods_id.pop()
