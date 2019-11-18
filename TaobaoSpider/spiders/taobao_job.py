@@ -87,7 +87,7 @@ class TaobaoJobSpider(scrapy.Spider):
         goods_id_list = []
         for row in self.cursor.fetchall():
             goods_id_list.append(row['goods_id'])
-            if("tmall" in row['detail_url']):
+            if "tmall" in row['detail_url']:
                 self.goods_type[row['goods_id']] = 1
             else:
                 self.goods_type[row['goods_id']] = 0
