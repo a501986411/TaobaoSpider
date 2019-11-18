@@ -6,6 +6,7 @@ from langconv import *
 import json
 from random import choice
 import html
+import logging
 class TaobaoJobSpider(scrapy.Spider):
     user_agent_list = [
         "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
@@ -135,6 +136,7 @@ class TaobaoJobSpider(scrapy.Spider):
         #monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
         item['monthly_sales'] = monthly_sales
         item['cover_img'] = self.get_cover_img(response)
+        logging.debug(item)
         return item
 
 
