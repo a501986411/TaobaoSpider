@@ -5,8 +5,7 @@ from TaobaoSpider.items import TaobaospiderItem
 from langconv import *
 import json
 from random import choice
-import time
-import logging
+import html
 class TaobaoJobSpider(scrapy.Spider):
     user_agent_list = [
         "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
@@ -129,7 +128,7 @@ class TaobaoJobSpider(scrapy.Spider):
 
     def get_item_for_list_amp(self,response):
         item = TaobaospiderItem()
-        item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
+        item['title'] = self.tradition2simple(html.unescape(response.xpath('//h1/text()').extract_first()))
         item['goods_id'] = self.goods_id_url[response.url]
         monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')[1]
         #monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
