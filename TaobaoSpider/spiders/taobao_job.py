@@ -55,12 +55,14 @@ class TaobaoJobSpider(scrapy.Spider):
     def parse(self, response):
         try:
             item = TaobaospiderItem()
-            item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
-            item['goods_id'] = self.goods_id_url[response.url]
-            # monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')
-            monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
-            item['monthly_sales'] = monthly_sales
-            item['cover_img'] = self.get_cover_img(response)
+            # item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
+            # logging.debug(response.xpath('//h1/text()').extract_first())
+            # item['goods_id'] = self.goods_id_url[response.url]
+            # # monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')
+            # monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
+            # item['monthly_sales'] = monthly_sales
+            # item['cover_img'] = self.get_cover_img(response)
+            item = self.get_item_for_list_amp(response)
             next_url = self.get_url()
             if next_url:
                 yield scrapy.Request(next_url,

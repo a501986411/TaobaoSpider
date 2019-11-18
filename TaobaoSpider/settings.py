@@ -54,7 +54,7 @@ COOKIES_ENABLED = False
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
 #   'TaobaoSpider.middlewares.TaobaospiderDownloaderMiddleware': 543,
-#   'TaobaoSpider.middlewares.ProxyMiddleware': 543,
+   'TaobaoSpider.middlewares.ProxyMiddleware': 543,
 }
 
 # Enable or disable extensions
