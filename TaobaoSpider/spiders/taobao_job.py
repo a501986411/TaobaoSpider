@@ -53,7 +53,6 @@ class TaobaoJobSpider(scrapy.Spider):
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         self.goods_id = self.getGoodsId() #设置所有需要爬去的商品ID
         self.start_urls = [self.get_url()] #设置入口url
-        logging.debug(self.start_urls)
 
 
 
@@ -105,6 +104,7 @@ class TaobaoJobSpider(scrapy.Spider):
         获取需要爬去的url
         :return: url
         """
+        logging.debug(self.goods_type)
         next_url = ''
         if len(self.goods_id) > 0:
             next_goods_id = self.goods_id.pop()
@@ -113,7 +113,6 @@ class TaobaoJobSpider(scrapy.Spider):
             else:
                 next_url = choice(self.taobao_url_prefix) % (str(next_goods_id))
             self.goods_id_url[next_url] = next_goods_id
-        logging.debug(next_url)
         return next_url
 
 
