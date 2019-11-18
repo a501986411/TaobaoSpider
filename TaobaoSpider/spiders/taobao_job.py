@@ -29,8 +29,11 @@ class TaobaoJobSpider(scrapy.Spider):
         "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24"
     ]
     url_prefix = [
-        # "https://world.taobao.com/item/%s.htm",
+        # "https://world.taobao.com/item/605662241470.htm",
         "https://www.taobao.com/list/item-amp/%s.htm"
+    ]
+    taobao_url_prefix = [
+        "https://item.taobao.com/item.htm?id=%s"
     ]
     handle_httpstatus_list = [404]
     # 定义爬虫名称
@@ -43,6 +46,7 @@ class TaobaoJobSpider(scrapy.Spider):
     db = ''
     cursor = ''
     goods_id_url = {}
+    goods_type = {}
     def __init__(self):
         super().__init__(scrapy.Spider)
         self.db = pymysql.connect('127.0.0.1', 'root', 'chen19920328', 'easy_taobao')
@@ -79,10 +83,14 @@ class TaobaoJobSpider(scrapy.Spider):
         获取需要爬去的url
         :return: url list
         """
-        self.cursor.execute('select goods_id from etb_goods where goods_id <> "" and goods_id in (608017591336, 607732047139, 605662241470, 606559762938)')
+        self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> "" and goods_id in (608017591336, 607732047139, 605662241470, 606559762938)')
         goods_id_list = []
         for row in self.cursor.fetchall():
             goods_id_list.append(row['goods_id'])
+            if("tmall" in row.detail_url):
+                self.goods_type[row['goods_id']] = 1
+            else:
+                self.goods_type[row['goods_id']] = 0
         goods_id_list.reverse()
         return goods_id_list
 
@@ -99,7 +107,10 @@ class TaobaoJobSpider(scrapy.Spider):
         next_url = ''
         if len(self.goods_id) > 0:
             next_goods_id = self.goods_id.pop()
-            next_url = choice(self.url_prefix) % (str(next_goods_id))
+            if(self.goods_type[next_goods_id] == 1):
+                next_url = choice(self.url_prefix) % (str(next_goods_id))
+            else:
+                next_url = choice(self.taobao_url_prefix) % (str(next_goods_id))
             self.goods_id_url[next_url] = next_goods_id
         return next_url
 
@@ -133,8 +144,11 @@ class TaobaoJobSpider(scrapy.Spider):
 
     def get_item_for_list_amp(self,response):
         item = TaobaospiderItem()
-        item['title'] = self.tradition2simple(html.unescape(response.xpath('//h1/text()').extract_first()))
         item['goods_id'] = self.goods_id_url[response.url]
+        if self.goods_type[item['goods_id']] == 1:
+            item['title'] = self.tradition2simple(html.unescape(response.xpath('//h1/text()').extract_first()))
+        else:
+            item['title'] = self.tradition2simple(html.unescape(response.xpath('//title/text()').extract_first())).replace("-淘宝网", '')
         monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')[1]
         #monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
         item['monthly_sales'] = monthly_sales
