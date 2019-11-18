@@ -25,8 +25,6 @@ class TaobaospiderPipeline(object):
               (item['goods_id'], item['title'], item['monthly_sales'], item['cover_img'])
         u_sql = "update etb_goods set title='%s',monthly_sales=%s, cover_img='%s' where goods_id=%s" % \
                 (item['title'], item['monthly_sales'], item['cover_img'], item['goods_id'])
-        logging.debug(sql)
-        logging.debug(u_sql)
         try:
             # 执行sql语句
             self.cursor.execute(sql)
