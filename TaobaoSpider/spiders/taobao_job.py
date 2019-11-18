@@ -6,6 +6,7 @@ from langconv import *
 import json
 from random import choice
 import time
+import logging
 class TaobaoJobSpider(scrapy.Spider):
     user_agent_list = [
         "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
@@ -52,7 +53,7 @@ class TaobaoJobSpider(scrapy.Spider):
 
 
     def parse(self, response):
-        time.sleep(5)
+        logging.info(response)
         try:
             item = TaobaospiderItem()
             # item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
@@ -62,6 +63,7 @@ class TaobaoJobSpider(scrapy.Spider):
             # item['monthly_sales'] = monthly_sales
             # item['cover_img'] = self.get_cover_img(response)
             item = self.get_item_for_list_amp()
+            logging.debug(item)
             next_url = self.get_url()
             if next_url:
                 yield scrapy.Request(next_url,
@@ -141,8 +143,8 @@ class TaobaoJobSpider(scrapy.Spider):
         #monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
         item['monthly_sales'] = monthly_sales
         item['cover_img'] = self.get_cover_img(response)
-        print("解析的数据:")
-        print(item)
+        logging.debug("解析的数据")
+        logging.debug(item)
         return item
 
 
