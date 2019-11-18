@@ -115,6 +115,7 @@ class TaobaoJobSpider(scrapy.Spider):
                         if item['@type'] == 'Product':
                             info['image'] = item['image'][0]
                             info['name'] = item['name']
+                            logging.debug(info)
                             return info
             except:
                 continue
