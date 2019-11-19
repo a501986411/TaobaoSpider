@@ -106,7 +106,7 @@ class TaobaospiderDownloaderMiddleware(object):
 
 class ProxyMiddleware(object):
     proxy_ip = ''
-    get_proxy_url = "http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=&city=0&yys=0&port=1&time=2&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions=&gm=4"
+    get_proxy_url = "http://http.tiqu.alicdns.com/getip3?num='1'&type='1'&pro=&city='0'&yys='0'&port='1'&time='2'&ts='0'&ys='0'&cs='0'&lb='1'&sb='0'&pb='4'&mr='1'&regions=&gm='4'"
 
     def get_proxy_ip(self):
         times = 0
@@ -115,8 +115,8 @@ class ProxyMiddleware(object):
                 sys.exit(0)
             if self.proxy_ip == '':
                 res = requests.get(self.get_proxy_url)
-                logging.info("获取代理IP:" + res.text())
-                p_ip = res.text()
+                logging.info("获取代理IP:" + res.text)
+                p_ip = res.text
             else:
                 p_ip = self.proxy_ip
             proxies = {"http": self.proxy_ip}
