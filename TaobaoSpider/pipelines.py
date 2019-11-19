@@ -13,7 +13,7 @@ class TaobaospiderPipeline(object):
     db = ''
     cursor = ''
     def __init__(self):
-        self.db = pymysql.connect('172.17.22.236', 'etb', 'chen19920328', 'easy_taobao')
+        self.db = pymysql.connect('47.240.39.15', 'etb', 'chen19920328', 'easy_taobao')
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
 
     def process_item(self, item, spider):

@@ -45,7 +45,7 @@ class TaobaoJobSpider(scrapy.Spider):
     goods_id_url = {}
     def __init__(self):
         super().__init__(scrapy.Spider)
-        self.db = pymysql.connect('172.17.22.236', 'etb', 'chen19920328', 'easy_taobao')
+        self.db = pymysql.connect('47.240.39.15', 'etb', 'chen19920328', 'easy_taobao')
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         self.goods_id = self.getGoodsId() #设置所有需要爬去的商品ID
         self.start_urls = [self.get_url()] #设置入口url
