@@ -5,7 +5,7 @@ from TaobaoSpider.items import TaobaospiderItem
 from langconv import *
 import json
 from random import choice
-import time
+import html
 import logging
 class TaobaoJobSpider(scrapy.Spider):
     user_agent_list = [
@@ -29,7 +29,7 @@ class TaobaoJobSpider(scrapy.Spider):
         "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24"
     ]
     url_prefix = [
-        "https://world.taobao.com/item/605662241470.htm",
+        "https://world.taobao.com/item/%s.htm",
         #"https://www.taobao.com/list/item-amp/%s.htm"
     ]
     handle_httpstatus_list = [404]
@@ -79,7 +79,7 @@ class TaobaoJobSpider(scrapy.Spider):
         获取需要爬去的url
         :return: url list
         """
-        self.cursor.execute('select goods_id from etb_goods where goods_id <> ""')
+        self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> "" and goods_id in (608017591336, 607732047139, 605662241470, 606559762938)')
         goods_id_list = []
         for row in self.cursor.fetchall():
             goods_id_list.append(row['goods_id'])
@@ -121,7 +121,6 @@ class TaobaoJobSpider(scrapy.Spider):
         item = TaobaospiderItem()
         item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
         item['goods_id'] = self.goods_id_url[response.url]
-        # monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')
         monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
         item['monthly_sales'] = monthly_sales
         item['cover_img'] = self.get_cover_img(response)
@@ -129,12 +128,12 @@ class TaobaoJobSpider(scrapy.Spider):
 
     def get_item_for_list_amp(self,response):
         item = TaobaospiderItem()
-        item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
         item['goods_id'] = self.goods_id_url[response.url]
+        item['title'] = self.tradition2simple(html.unescape(response.xpath('//h1/text()').extract_first()))
         monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')[1]
-        #monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
         item['monthly_sales'] = monthly_sales
         item['cover_img'] = self.get_cover_img(response)
+        logging.debug(item)
         return item
 
 
