@@ -58,6 +58,7 @@ class TaobaoJobSpider(scrapy.Spider):
 
     def parse(self, response):
         try:
+            logging.debug(response.xpath('//title/text()').extract_first())
             now_goods_id = self.goods_id_url[response.url]
             if self.goods_type[now_goods_id] == 1:
                 item = self.get_item_for_list_amp(response)
@@ -155,7 +156,7 @@ class TaobaoJobSpider(scrapy.Spider):
     def get_tb_item(self, response):
         item = TaobaospiderItem()
         item['goods_id'] = self.goods_id_url[response.url]
-        item['title'] = self.tradition2simple(html.unescape(response.xpath('//h1/text()').extract_first()))
+        item['title'] = self.tradition2simple(html.unescape(response.xpath('//title/text()').extract_first()))
         monthly_sales = 0
         item['monthly_sales'] = monthly_sales
         item['cover_img'] = ''
