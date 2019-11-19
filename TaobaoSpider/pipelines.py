@@ -32,7 +32,8 @@ class TaobaospiderPipeline(object):
             self.cursor.execute(u_sql)
 
             self.db.commit()
-        except:
+        except Exception as e:
+            logging.error(e)
             self.db.rollback()
 
 
