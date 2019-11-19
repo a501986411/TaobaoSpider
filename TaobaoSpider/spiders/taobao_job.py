@@ -124,6 +124,7 @@ class TaobaoJobSpider(scrapy.Spider):
         monthly_sales = response.xpath('//div[@class="sub-title"]/span/text()').extract()[1]
         item['monthly_sales'] = monthly_sales
         item['cover_img'] = self.get_cover_img(response)
+        logging.debug(item)
         return item
 
     def get_item_for_list_amp(self, response):
