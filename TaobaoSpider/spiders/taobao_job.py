@@ -29,8 +29,8 @@ class TaobaoJobSpider(scrapy.Spider):
         "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24"
     ]
     url_prefix = [
-        # "https://world.taobao.com/item/%s.htm",
-        "https://www.taobao.com/list/item-amp/%s.htm"
+        "https://world.taobao.com/item/%s.htm",
+        # "https://www.taobao.com/list/item-amp/%s.htm"
     ]
     handle_httpstatus_list = [404]
     # 定义爬虫名称
@@ -45,7 +45,7 @@ class TaobaoJobSpider(scrapy.Spider):
     goods_id_url = {}
     def __init__(self):
         super().__init__(scrapy.Spider)
-        self.db = pymysql.connect('127.0.0.1', 'root', 'chen19920328', 'easy_taobao')
+        self.db = pymysql.connect('172.17.22.236', 'etb', 'chen19920328', 'easy_taobao')
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         self.goods_id = self.getGoodsId() #设置所有需要爬去的商品ID
         self.start_urls = [self.get_url()] #设置入口url
@@ -54,8 +54,8 @@ class TaobaoJobSpider(scrapy.Spider):
 
     def parse(self, response):
         try:
-            item = self.get_item_for_list_amp(response)
-            # item = self.get_item_for_word(response)
+            # item = self.get_item_for_list_amp(response)
+            item = self.get_item_for_word(response)
             next_url = self.get_url()
             if next_url:
                 yield scrapy.Request(next_url,
@@ -79,7 +79,7 @@ class TaobaoJobSpider(scrapy.Spider):
         获取需要爬去的url
         :return: url list
         """
-        self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> "" AND goods_id in (607224121178, 607193385189, 607634179066)')
+        self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> ""')
         goods_id_list = []
         for row in self.cursor.fetchall():
             goods_id_list.append(row['goods_id'])
