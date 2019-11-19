@@ -106,7 +106,7 @@ class TaobaospiderDownloaderMiddleware(object):
 
 class ProxyMiddleware(object):
     proxy_ip = ''
-    get_proxy_url = "http://http.tiqu.alicdns.com/getip3?num='1'&type='1'&pro=&city='0'&yys='0'&port='1'&time='2'&ts='0'&ys='0'&cs='0'&lb='1'&sb='0'&pb='4'&mr='1'&regions=&gm='4'"
+    get_proxy_url = "http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=&city=0&yys=0&port=1&time=2&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions=&gm=4"
 
     def get_proxy_ip(self):
         times = 0
@@ -129,6 +129,7 @@ class ProxyMiddleware(object):
 
 
     def process_request(self,request,spider):
+        self.get_proxy_ip()
         print("使用的IP:", self.proxy_ip)
         if request.url.startswith("http://"):
             request.meta['proxy']="http://"+ str(self.proxy_ip)
