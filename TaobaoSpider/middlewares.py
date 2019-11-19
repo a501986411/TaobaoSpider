@@ -115,7 +115,7 @@ class ProxyMiddleware(object):
                 sys.exit(0)
             if self.proxy_ip == '':
                 res = requests.get(self.get_proxy_url)
-                logging.info("获取代理IP:" + res.text)
+                logging.info("获取代理IP:" + res.text())
                 p_ip = res.text
             else:
                 p_ip = self.proxy_ip
