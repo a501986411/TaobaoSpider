@@ -8,6 +8,8 @@
 from scrapy import signals
 from random import choice
 import requests
+import sys
+import logging
 class TaobaospiderSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
@@ -103,30 +105,32 @@ class TaobaospiderDownloaderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 class ProxyMiddleware(object):
-    proxys = [
-       "58.218.214.138:8033"
-    ]
+    proxy_ip = ''
+    get_proxy_url = "http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=&city=0&yys=0&port=1&time=2&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions=&gm=4"
 
-    def get_proxy_ip(self, proxy):
-
-        proxies = {"http": proxy}
-        response = requests.get('http://www.baidu.com', proxies=proxies, timeout=2)
-        if response.status_code == 200:
-            return proxy
-        return False
-    def process_request(self,request,spider):
+    def get_proxy_ip(self):
         times = 0
         while True:
-            proxy = self.get_proxy_ip(choice(self.proxys))
-            if proxy == False:
-                times += 1
-                if times >= 3:
-                    break
-                continue
+            if times >= 5:
+                sys.exit(0)
+            if self.proxy_ip == '':
+                res = requests.get(self.get_proxy_url)
+                logging.info("获取代理IP:" + res.text)
+                p_ip = res.text
             else:
+                p_ip = self.proxy_ip
+            proxies = {"http": self.proxy_ip}
+            response = requests.get('http://www.baidu.com', proxies=proxies, timeout=2)
+            if response.status_code == 200:
+                self.proxy_ip = p_ip
                 break
-        print("使用的IP:", proxy)
+            else:
+                continue
+
+
+    def process_request(self,request,spider):
+        print("使用的IP:", self.proxy_ip)
         if request.url.startswith("http://"):
-            request.meta['proxy']="http://"+ str(proxy)
+            request.meta['proxy']="http://"+ str(self.proxy_ip)
         elif request.url.startswith("https://"):
-            request.meta['proxy']="https://"+ str(proxy)
+            request.meta['proxy']="https://"+ str(self.proxy_ip)
