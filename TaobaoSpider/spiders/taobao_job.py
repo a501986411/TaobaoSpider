@@ -79,7 +79,7 @@ class TaobaoJobSpider(scrapy.Spider):
         获取需要爬去的url
         :return: url list
         """
-        self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> "" AND goods_id in (607415124550, 607251861603, 607451390712)')
+        self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> "" AND goods_id in (607224121178, 607193385189, 607634179066)')
         goods_id_list = []
         for row in self.cursor.fetchall():
             goods_id_list.append(row['goods_id'])
