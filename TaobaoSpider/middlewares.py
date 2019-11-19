@@ -105,7 +105,8 @@ class TaobaospiderDownloaderMiddleware(object):
 class ProxyMiddleware(object):
     proxys = [
         "58.218.92.130:5237",
-        "58.218.214.134:4727"
+        "58.218.214.134:4727",
+        "58.218.92.169:8494",
     ]
 
     def get_proxy_ip(self, proxy):
