@@ -104,9 +104,23 @@ class TaobaospiderDownloaderMiddleware(object):
 
 class ProxyMiddleware(object):
     proxys = [
-        "58.218.92.130:5237",
-        "58.218.214.134:4727",
-        "58.218.92.169:8494",
+        "58.218.214.148:3658",
+        "58.218.214.145:6311",
+        "58.218.214.144:6545",
+        "58.218.214.149:4553",
+        "58.218.214.142:7384",
+        "58.218.214.143:6506",
+        "58.218.214.145:8213",
+        "58.218.214.149:3642",
+        "58.218.214.142:6204",
+        "58.218.214.143:6870",
+        "58.218.214.149:5339",
+        "58.218.214.145:5866",
+        "58.218.214.144:7956",
+        "58.218.214.148:4225",
+        "58.218.214.149:6671",
+        "58.218.214.145:7167",
+        "58.218.214.147:7845",
     ]
 
     def get_proxy_ip(self, proxy):
@@ -117,13 +131,18 @@ class ProxyMiddleware(object):
             return proxy
         return False
     def process_request(self,request,spider):
-        proxy = self.get_proxy_ip(choice(self.proxys))
-        if proxy == False:
+        times = 0
+        while True:
             proxy = self.get_proxy_ip(choice(self.proxys))
+            if proxy == False:
+                times += 1
+                if times >= 3:
+                    break
+                continue
+            else:
+                break
         print("使用的IP:", proxy)
         if request.url.startswith("http://"):
             request.meta['proxy']="http://"+ str(proxy)
         elif request.url.startswith("https://"):
             request.meta['proxy']="https://"+ str(proxy)
-        request.meta['dont_redirect'] = True
-        request.meta['handle_httpstatus_list'] = [302]
