@@ -117,7 +117,7 @@ class TaobaoJobSpider(scrapy.Spider):
                 continue
         return ''
 
-    def get_item_for_word(self,response):
+    def get_item_for_word(self, response):
         item = TaobaospiderItem()
         item['title'] = self.tradition2simple(response.xpath('//h1/text()').extract_first())
         item['goods_id'] = self.goods_id_url[response.url]
@@ -126,7 +126,7 @@ class TaobaoJobSpider(scrapy.Spider):
         item['cover_img'] = self.get_cover_img(response)
         return item
 
-    def get_item_for_list_amp(self,response):
+    def get_item_for_list_amp(self, response):
         item = TaobaospiderItem()
         item['goods_id'] = self.goods_id_url[response.url]
         item['title'] = self.tradition2simple(html.unescape(response.xpath('//h1/text()').extract_first()))
