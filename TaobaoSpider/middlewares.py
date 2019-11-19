@@ -129,8 +129,9 @@ class ProxyMiddleware(object):
 
 
     def process_request(self,request,spider):
+        logging.info("当前代理:" + self.proxy_ip)
         self.get_proxy_ip()
-        print("使用的IP:", self.proxy_ip)
+        logging.info("使用的IP:"+self.proxy_ip)
         if request.url.startswith("http://"):
             request.meta['proxy']="http://"+ str(self.proxy_ip)
         elif request.url.startswith("https://"):
