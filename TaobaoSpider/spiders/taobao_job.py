@@ -33,7 +33,7 @@ class TaobaoJobSpider(scrapy.Spider):
         "https://www.taobao.com/list/item-amp/%s.htm"
     ]
     taobao_url_prefix = [
-        "https://item.taobao.com/item.htm?spm=a2oq0.12575281.0.0.7b5f1debuWBjLW&ft=t&id=%s"
+        "https://world.taobao.com/item/%s.htm",
     ]
     handle_httpstatus_list = [404]
     # 定义爬虫名称
