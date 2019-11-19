@@ -54,8 +54,8 @@ class TaobaoJobSpider(scrapy.Spider):
 
     def parse(self, response):
         try:
-            # item = self.get_item_for_list_amp(response)
-            item = self.get_item_for_word(response)
+            item = self.get_item_for_list_amp(response)
+            # item = self.get_item_for_word(response)
             next_url = self.get_url()
             if next_url:
                 yield scrapy.Request(next_url,
