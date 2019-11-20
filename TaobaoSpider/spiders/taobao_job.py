@@ -130,12 +130,7 @@ class TaobaoJobSpider(scrapy.Spider):
             "type": "jsonp",
             "dataType": "jsonp",
             "callback": "mtopjsonp1",
-            "data" : {
-                "exParams": {
-                    "countryCode": "CN"
-                },
-                "itemNumId": item['goods_id']
-            }
+            "data" :{"exParams":"{\"countryCode\":\"CN\"}","itemNumId":str(item['goods_id'])}
         }
 
         url = "https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?"+parse.urlencode(param)
