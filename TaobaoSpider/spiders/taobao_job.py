@@ -7,6 +7,9 @@ import json
 from random import choice
 import html
 import logging
+import json
+import time
+from urllib import parse
 class TaobaoJobSpider(scrapy.Spider):
     user_agent_list = [
         "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
@@ -36,7 +39,7 @@ class TaobaoJobSpider(scrapy.Spider):
         "https://www.taobao.com/list/item-amp/%s.htm"
     ]
     tb_url = {
-        "title": "https://item.taobao.com/item.htm?id=%s",
+        "title": "https://item.taobao.com/item.htm?spm=a1z10.1-c.w4004-21346271448.4.7d3f3f48rFn2t2&%s",
         'monthly_sales': "https://www.taobao.com/list/item-amp/%s.htm",
         "cover_img": "https://www.taobao.com/list/item-amp/%s.htm",
     }
@@ -61,7 +64,8 @@ class TaobaoJobSpider(scrapy.Spider):
     goods_type = {}
     def __init__(self):
         super().__init__(scrapy.Spider)
-        self.db = pymysql.connect('47.240.39.15', 'etb', 'chen19920328', 'easy_taobao')
+        # self.db = pymysql.connect('47.240.39.15', 'etb', 'chen19920328', 'easy_taobao')
+        self.db = pymysql.connect('localhost', 'root', 'chen19920328', 'easy_taobao')
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         # 设置所有需要爬去的商品ID
         self.goods_id = self.getGoodsId()
@@ -93,20 +97,60 @@ class TaobaoJobSpider(scrapy.Spider):
         item['monthly_sales'] = monthly_sales
         item['cover_img'] = self.get_cover_img(response)
         if self.type_now == self.type_tb:
-            item = scrapy.Request(self.tb_url['title'], meta={'item': item}, headers={
+            url =response.xpath('//a[@rel="nofollow"]/@href').extract().pop()
+            item = scrapy.Request(url, meta={'item': item}, headers={
                 "user-agent": choice(self.user_agent_list),
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            },  callback=self.parse_tb_title)
+            },  callback=self.parse_tb_title_one)
         elif self.type_now == self.type_tm:
             item['title'] = self.tradition2simple(html.unescape(response.xpath('//h1/text()').extract_first()))
         else:
             pass
         return item
 
-    def parse_tb_title(self, response):
+    def get_time_stamp(self):
+        ct = time.time()
+        local_time = time.localtime(ct)
+        data_head = time.strftime("%Y-%m-%d %H:%M:%S", local_time)
+        data_secs = (ct - int(ct)) * 1000
+        time_stamp = "%s.%03d" % (data_head, data_secs)
+        stamp = ("".join(time_stamp.split()[0].split("-")) + "".join(time_stamp.split()[1].split(":"))).replace('.', '')
+        return stamp
+
+    def parse_tb_title_one(self, response):
         # 接收上级已爬取的数据
         item = response.meta['item']
+        param = {
+            "jsv":"2.5.1",
+            "appKey":12574478,
+            "t":self.get_time_stamp(),
+            "api": "mtop.taobao.detail.getdetail",
+            "v": "6.0",
+            "ttid": "2017@htao_h5_1.0.0",
+            "type": "jsonp",
+            "dataType": "jsonp",
+            "callback": "mtopjsonp1",
+            "data" : {
+                "exParams": {
+                    "countryCode": "CN"
+                },
+                "itemNumId": item['goods_id']
+            }
+        }
+
+        url = "https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?"+parse.urlencode(param)
+        logging.error(url)
+        item = scrapy.Request(url, meta={'item': item}, headers={
+            "user-agent": choice(self.user_agent_list),
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        }, callback=self.parse_tb_title_two)
+        return item
+    def parse_tb_title_two(self, response):
+        item = response.meta['item']
         logging.error(item)
+        logging.error(response.xpath("//text()"))
+        sys.exit(0)
+
 
     def getGoodsId(self):
         """
