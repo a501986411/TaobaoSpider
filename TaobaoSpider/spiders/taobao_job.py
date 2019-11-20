@@ -28,10 +28,25 @@ class TaobaoJobSpider(scrapy.Spider):
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24",
         "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24"
     ]
+    type_tb = 1
+    type_tm = 2
+    type_now = 0
     url_prefix = [
-        "https://world.taobao.com/item/%s.htm",
-        # "https://www.taobao.com/list/item-amp/%s.htm"
+        # "https://world.taobao.com/item/%s.htm",
+        "https://www.taobao.com/list/item-amp/%s.htm"
     ]
+    tb_url = {
+        "title": "https://item.taobao.com/item.htm?id=%s",
+        'monthly_sales': "https://www.taobao.com/list/item-amp/%s.htm",
+        "cover_img": "https://www.taobao.com/list/item-amp/%s.htm",
+    }
+
+    tm_url = {
+        'title': "https://www.taobao.com/list/item-amp/%s.htm",
+        'monthly_sales': "https://www.taobao.com/list/item-amp/%s.htm",
+        "cover_img": "https://www.taobao.com/list/item-amp/%s.htm",
+    }
+
     handle_httpstatus_list = [404]
     # 定义爬虫名称
     name = 'taobao_job'
@@ -43,19 +58,18 @@ class TaobaoJobSpider(scrapy.Spider):
     db = ''
     cursor = ''
     goods_id_url = {}
+    goods_type = {}
     def __init__(self):
         super().__init__(scrapy.Spider)
         self.db = pymysql.connect('47.240.39.15', 'etb', 'chen19920328', 'easy_taobao')
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
-        self.goods_id = self.getGoodsId() #设置所有需要爬去的商品ID
+        # 设置所有需要爬去的商品ID
+        self.goods_id = self.getGoodsId()
         self.start_urls = [self.get_url()] #设置入口url
-
-
 
     def parse(self, response):
         try:
-            # item = self.get_item_for_list_amp(response)
-            item = self.get_item_for_word(response)
+            item = self.get_item_info(response)
             next_url = self.get_url()
             if next_url:
                 yield scrapy.Request(next_url,
@@ -72,7 +86,27 @@ class TaobaoJobSpider(scrapy.Spider):
                     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 }, callback=self.parse)
 
+    def get_item_info(self, response):
+        item = TaobaospiderItem()
+        item['goods_id'] = self.goods_id_url[response.url]
+        monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')[1]
+        item['monthly_sales'] = monthly_sales
+        item['cover_img'] = self.get_cover_img(response)
+        if self.type_now == self.type_tb:
+            item = scrapy.Request(self.tb_url['title'], meta={'item': item}, headers={
+                "user-agent": choice(self.user_agent_list),
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            },  callback=self.parse_tb_title)
+        elif self.type_now == self.type_tm:
+            item['title'] = self.tradition2simple(html.unescape(response.xpath('//h1/text()').extract_first()))
+        else:
+            pass
+        return item
 
+    def parse_tb_title(self, response):
+        # 接收上级已爬取的数据
+        item = response.meta['item']
+        logging.error(item)
 
     def getGoodsId(self):
         """
@@ -83,6 +117,10 @@ class TaobaoJobSpider(scrapy.Spider):
         goods_id_list = []
         for row in self.cursor.fetchall():
             goods_id_list.append(row['goods_id'])
+            if "tmall" in row['detail_url']:
+                self.goods_type[row['goods_id']] = self.type_tm
+            else:
+                self.goods_type[row['goods_id']] = self.type_tb
         goods_id_list.reverse()
         return goods_id_list
 
@@ -101,6 +139,8 @@ class TaobaoJobSpider(scrapy.Spider):
             next_goods_id = self.goods_id.pop()
             next_url = choice(self.url_prefix) % (str(next_goods_id))
             self.goods_id_url[next_url] = next_goods_id
+            # 设置当前爬取的商品的类型
+            self.type_now = self.goods_type[next_goods_id]
         return next_url
 
     def get_cover_img(self, response):
