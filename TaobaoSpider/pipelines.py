@@ -17,7 +17,14 @@ class TaobaospiderPipeline(object):
         # self.db = pymysql.connect('localhost', 'root', 'chen19920328', 'easy_taobao')
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
 
+    def reConnect(self):
+        try:
+            self.db.connection.ping()
+        except:
+            self.db.connection()
+
     def process_item(self, item, spider):
+        self.reConnect()
         self.save_data(item)
 
     def save_data(self, item):

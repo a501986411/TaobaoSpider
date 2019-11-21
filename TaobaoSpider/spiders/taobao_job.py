@@ -152,7 +152,6 @@ class TaobaoJobSpider(scrapy.Spider):
         try:
             text = response.xpath("//text()").extract_first().replace("mtopjsonp1(","").replace(")","")
             json_text = json.loads(text)
-            logging.debug(json_text)
             item['title'] = json_text['data']['item']['title']
         except Exception as e:
             item['title'] = "获取出错"
@@ -164,7 +163,7 @@ class TaobaoJobSpider(scrapy.Spider):
         获取需要爬去的url
         :return: url list
         """
-        self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> "" and goods_id in (607042229388, 606900341718)')
+        self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> ""')
         goods_id_list = []
         for row in self.cursor.fetchall():
             goods_id_list.append(row['goods_id'])
