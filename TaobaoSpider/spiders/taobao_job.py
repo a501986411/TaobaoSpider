@@ -64,8 +64,8 @@ class TaobaoJobSpider(scrapy.Spider):
     goods_type = {}
     def __init__(self):
         super().__init__(scrapy.Spider)
-        # self.db = pymysql.connect('47.240.39.15', 'etb', 'chen19920328', 'easy_taobao')
-        self.db = pymysql.connect('localhost', 'root', 'chen19920328', 'easy_taobao')
+        self.db = pymysql.connect('47.240.39.15', 'etb', 'chen19920328', 'easy_taobao')
+        # self.db = pymysql.connect('localhost', 'root', 'chen19920328', 'easy_taobao')
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         # 设置所有需要爬去的商品ID
         self.goods_id = self.getGoodsId()
@@ -124,7 +124,7 @@ class TaobaoJobSpider(scrapy.Spider):
             "jsv":"2.5.1",
             "appKey":12574478,
             "t": int(time.time() * 1000),
-            "sign": "08ca47d1bf4ac9d0a8c297fe0980c9b6",
+            #"sign": "08ca47d1bf4ac9d0a8c297fe0980c9b6",
             "api": "mtop.taobao.detail.getdetail",
             "v": "6.0",
             "ttid": "2017@htao_h5_1.0.0",
@@ -134,8 +134,7 @@ class TaobaoJobSpider(scrapy.Spider):
             "data" : json.dumps({"exParams":"{\"countryCode\":\"CN\"}","itemNumId":str(item['goods_id'])})
         }
 
-        url = "https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?"+parse.urlencode(param)
-        logging.error(url)
+        url = "https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?"+parse.urlencode(param).replace('+','')
         item = scrapy.Request(url, meta={'item': item}, headers={
             "user-agent": choice(self.user_agent_list),
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -143,10 +142,10 @@ class TaobaoJobSpider(scrapy.Spider):
         return item
     def parse_tb_title_two(self, response):
         item = response.meta['item']
-        parse.urlde
-        logging.error(response.xpath("//text()"))
-        sys.exit(0)
-
+        text = response.xpath("//text()").extract_first().replace("mtopjsonp1(","").replace(")","")
+        json_text = json.loads(text)
+        item['title'] = json_text['data']['item']['title']
+        return item
 
     def getGoodsId(self):
         """
