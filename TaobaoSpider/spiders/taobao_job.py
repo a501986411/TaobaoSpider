@@ -123,14 +123,15 @@ class TaobaoJobSpider(scrapy.Spider):
         param = {
             "jsv":"2.5.1",
             "appKey":12574478,
-            "t":self.get_time_stamp(),
+            "t": int(time.time() * 1000),
+            "sign": "08ca47d1bf4ac9d0a8c297fe0980c9b6",
             "api": "mtop.taobao.detail.getdetail",
             "v": "6.0",
             "ttid": "2017@htao_h5_1.0.0",
             "type": "jsonp",
             "dataType": "jsonp",
             "callback": "mtopjsonp1",
-            "data" :{"exParams":"{\"countryCode\":\"CN\"}","itemNumId":str(item['goods_id'])}
+            "data" : json.dumps({"exParams":"{\"countryCode\":\"CN\"}","itemNumId":str(item['goods_id'])})
         }
 
         url = "https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?"+parse.urlencode(param)
@@ -142,7 +143,7 @@ class TaobaoJobSpider(scrapy.Spider):
         return item
     def parse_tb_title_two(self, response):
         item = response.meta['item']
-        logging.error(item)
+        parse.urlde
         logging.error(response.xpath("//text()"))
         sys.exit(0)
 
