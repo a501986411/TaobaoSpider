@@ -152,6 +152,7 @@ class TaobaoJobSpider(scrapy.Spider):
         try:
             text = response.xpath("//text()").extract_first().replace("mtopjsonp1(","").replace(")","")
             json_text = json.loads(text)
+            logging.debug(json_text)
             item['title'] = json_text['data']['item']['title']
         except Exception as e:
             item['title'] = "获取出错"
