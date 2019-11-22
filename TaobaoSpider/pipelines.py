@@ -24,7 +24,6 @@ class TaobaospiderPipeline(object):
             self.db.connection()
 
     def process_item(self, item, spider):
-        self.reConnect()
         self.save_data(item)
 
     def save_data(self, item):
