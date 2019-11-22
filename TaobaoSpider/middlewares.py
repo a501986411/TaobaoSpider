@@ -105,9 +105,9 @@ class TaobaospiderDownloaderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 class ProxyMiddleware(object):
-    proxy_ip = '58.218.214.128:4916'
-    get_proxy_url = "http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=&city=0&yys=0&port=1&time=2&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions=&gm=4"
-
+    proxy_ip = '58.218.92.129:8779'
+    # get_proxy_url = "http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=&city=0&yys=0&port=1&time=2&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions=&gm=4"
+    get_proxy_url = ""
     def get_proxy_ip(self):
         times = 0
         while True:
