@@ -10,6 +10,9 @@ from random import choice
 import requests
 import sys
 import logging
+import configparser
+import time
+import json
 class TaobaospiderSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
@@ -105,34 +108,61 @@ class TaobaospiderDownloaderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 class ProxyMiddleware(object):
-    proxy_ip = '58.218.92.129:8779'
-    # get_proxy_url = "http://http.tiqu.alicdns.com/getip3?num=1&type=1&pro=&city=0&yys=0&port=1&time=2&ts=0&ys=0&cs=0&lb=1&sb=0&pb=4&mr=1&regions=&gm=4"
+    proxy_cf = ''
+    db = ''
+    cursor = ''
     get_proxy_url = ""
+    def __init__(self):
+        self.proxy_cf = configparser.ConfigParser()
+        self.proxy_cf.read('G:\\project\\TaobaoSpider\\config\\proxy.ini', encoding="utf-8")
+
     def get_proxy_ip(self):
-        times = 0
-        while True:
-            if times >= 5:
-                sys.exit(0)
-            if self.proxy_ip == '':
-                res = requests.get(self.get_proxy_url)
-                logging.info("获取代理IP:" + res.text)
-                p_ip = res.text
-            else:
-                p_ip = self.proxy_ip
-            proxies = {"http": self.proxy_ip}
-            response = requests.get('http://www.baidu.com', proxies=proxies, timeout=2)
+        proxy_ip = self.proxy_cf.get('proxy', 'ip')
+        if proxy_ip == '':
+            proxy_ip = self.get_ip_by_url()
+
+        # 检查代理是否失效
+        try:
+            proxies = {"http": proxy_ip}
+            response = requests.get('http://www.baidu.com', proxies=proxies)
+            if response.status_code != 200:
+                logging.info('代理proxy_ip失效,重新获取')
+                proxy_ip = self.get_ip_by_url()
+        except Exception as e:
+            logging.error(e)
+            proxy_ip = self.get_ip_by_url()
+        return proxy_ip
+
+    def get_ip_by_url(self):
+        url = self.proxy_cf.get('proxy', 'url')
+        try:
+            response = requests.get(url)
             if response.status_code == 200:
-                self.proxy_ip = p_ip
-                break
+                if "113" in response.text:
+                    logging.error(response.text)
+                    sys.exit(0)
+                proxy_ip = response.text.strip()
+                self.proxy_cf.set('proxy', 'ip', proxy_ip)
+                self.proxy_cf.set('proxy', 'get_ip_time', time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
+                with open("G:\\project\\TaobaoSpider\\config\\proxy.ini", "w+") as f:
+                        self.proxy_cf.write(f)
             else:
-                continue
+                proxy_ip = ''
+                logging.error('代理IP获取失败1')
+        except Exception as e:
+            logging.error('代理IP获取失败2；'+e)
+            proxy_ip = ''
+        logging.debug(proxy_ip)
+        sys.exit(0)
+        return proxy_ip
 
-
-    def process_request(self,request,spider):
-        logging.info("当前代理:" + self.proxy_ip)
-        self.get_proxy_ip()
-        logging.info("使用的IP:"+self.proxy_ip)
-        if request.url.startswith("http://"):
-            request.meta['proxy']="http://"+ str(self.proxy_ip)
-        elif request.url.startswith("https://"):
-            request.meta['proxy']="https://"+ str(self.proxy_ip)
+    def process_request(self, request, spider):
+        proxy_ip = self.get_proxy_ip()
+        if proxy_ip:
+            if request.url.startswith("http://"):
+                request.meta['proxy'] = "http://" + str(proxy_ip)
+            elif request.url.startswith("https://"):
+                request.meta['proxy'] = "https://" + str(proxy_ip)
+        else:
+            logging.debug("未设置代理IP")
+            sys.exit(0)
