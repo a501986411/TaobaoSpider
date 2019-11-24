@@ -3,13 +3,14 @@ import scrapy
 import pymysql
 from TaobaoSpider.items import TaobaospiderItem
 from langconv import *
-import json
 from random import choice
 import html
 import logging
 import json
 import time
 from urllib import parse
+import configparser
+import conf
 class TaobaoJobSpider(scrapy.Spider):
     user_agent_list = [
         "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/22.0.1207.1 Safari/537.1",
@@ -62,14 +63,19 @@ class TaobaoJobSpider(scrapy.Spider):
     cursor = ''
     goods_id_url = {}
     goods_type = {}
+    cf = ''
+    db_cnf = ''
     def __init__(self):
         super().__init__(scrapy.Spider)
-        self.db = pymysql.connect('47.240.39.15', 'etb', 'chen19920328', 'easy_taobao')
-        # self.db = pymysql.connect('localhost', 'root', 'chen19920328', 'easy_taobao')
+        self.db_cnf = configparser.ConfigParser()
+        self.cf = conf.conf()
+        self.db_cnf.read(self.cf.get_db_conf(), encoding="utf-8")
+        self.db = pymysql.connect(self.db_cnf.get('db','db_host'), self.db_cnf.get('db','db_user'),self.db_cnf.get('db','db_pwd'), self.db_cnf.get('db','db_database'))
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         # 设置所有需要爬去的商品ID
         self.goods_id = self.getGoodsId()
-        self.start_urls = [self.get_url()] #设置入口url
+        self.start_urls = self.get_start_urls() #设置入口url
+        logging.error(self.start_urls)
 
     def parse(self, response):
         try:
@@ -89,6 +95,17 @@ class TaobaoJobSpider(scrapy.Spider):
                     "user-agent":choice(self.user_agent_list),
                     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 }, callback=self.parse)
+
+    def get_start_urls(self):
+        """
+        获取入口url列表
+        :return: list
+        """
+        all_goods_id = self.getGoodsId()
+        start_urls = []
+        for g_id in all_goods_id:
+            start_urls.append(choice(self.url_prefix) % (str(g_id)))
+        return  start_urls
 
     def get_item_info(self, response):
         item = TaobaospiderItem()

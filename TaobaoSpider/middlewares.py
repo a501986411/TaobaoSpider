@@ -12,7 +12,7 @@ import sys
 import logging
 import configparser
 import time
-import json
+import conf
 class TaobaospiderSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
@@ -109,12 +109,14 @@ class TaobaospiderDownloaderMiddleware(object):
 
 class ProxyMiddleware(object):
     proxy_cf = ''
+    cf =''
     db = ''
     cursor = ''
     get_proxy_url = ""
     def __init__(self):
         self.proxy_cf = configparser.ConfigParser()
-        self.proxy_cf.read('G:\\project\\TaobaoSpider\\config\\proxy.ini', encoding="utf-8")
+        self.cf = conf.conf()
+        self.proxy_cf.read(self.cf.get_proxy_conf(), encoding="utf-8")
 
     def get_proxy_ip(self):
         proxy_ip = self.proxy_cf.get('proxy', 'ip')
@@ -126,7 +128,7 @@ class ProxyMiddleware(object):
             proxies = {"http": proxy_ip}
             response = requests.get('http://www.baidu.com', proxies=proxies)
             if response.status_code != 200:
-                logging.info('代理proxy_ip失效,重新获取')
+                logging.debug('代理'+proxy_ip+'失效,重新获取')
                 proxy_ip = self.get_ip_by_url()
         except Exception as e:
             logging.error(e)
@@ -138,22 +140,21 @@ class ProxyMiddleware(object):
         try:
             response = requests.get(url)
             if response.status_code == 200:
-                if "113" in response.text:
+                if "code" in response.text:
                     logging.error(response.text)
                     sys.exit(0)
-                proxy_ip = response.text.strip()
-                self.proxy_cf.set('proxy', 'ip', proxy_ip)
-                self.proxy_cf.set('proxy', 'get_ip_time', time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
-                with open("G:\\project\\TaobaoSpider\\config\\proxy.ini", "w+") as f:
-                        self.proxy_cf.write(f)
+                else:
+                    proxy_ip = response.text.strip()
+                    self.proxy_cf.set('proxy', 'ip', proxy_ip)
+                    self.proxy_cf.set('proxy', 'get_ip_time', time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
+                    with open(self.cf.get_proxy_conf(), "w+") as f:
+                            self.proxy_cf.write(f)
             else:
                 proxy_ip = ''
                 logging.error('代理IP获取失败1')
         except Exception as e:
             logging.error('代理IP获取失败2；'+e)
             proxy_ip = ''
-        logging.debug(proxy_ip)
-        sys.exit(0)
         return proxy_ip
 
     def process_request(self, request, spider):
@@ -166,3 +167,4 @@ class ProxyMiddleware(object):
         else:
             logging.debug("未设置代理IP")
             sys.exit(0)
+        logging.info('使用的代理:'+proxy_ip)

@@ -6,15 +6,21 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import pymysql
 import logging
+import configparser
+import conf
 class TaobaospiderPipeline(object):
     """
     保存爬虫数据到数据库
     """
     db = ''
     cursor = ''
+    db_cnf = ''
+    cf = ''
     def __init__(self):
-        self.db = pymysql.connect('47.240.39.15', 'etb', 'chen19920328', 'easy_taobao')
-        # self.db = pymysql.connect('localhost', 'root', 'chen19920328', 'easy_taobao')
+        self.db_cnf = configparser.ConfigParser()
+        self.cf = conf.conf()
+        self.db_cnf.read(self.cf.get_db_conf(), encoding="utf-8")
+        self.db = pymysql.connect(self.db_cnf.get('db', 'db_host'), self.db_cnf.get('db', 'db_user'), self.db_cnf.get('db', 'db_pwd'), self.db_cnf.get('db', 'db_database'))
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
 
     def reConnect(self):
