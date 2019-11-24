@@ -73,9 +73,9 @@ class TaobaoJobSpider(scrapy.Spider):
         self.db = pymysql.connect(self.db_cnf.get('db','db_host'), self.db_cnf.get('db','db_user'),self.db_cnf.get('db','db_pwd'), self.db_cnf.get('db','db_database'))
         self.cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
         # 设置所有需要爬去的商品ID
+        # self.start_urls = self.get_start_urls() #设置入口url
         self.goods_id = self.getGoodsId()
-        self.start_urls = self.get_start_urls() #设置入口url
-        logging.error(self.start_urls)
+        self.start_urls = [self.get_url()] #设置入口url
 
     def parse(self, response):
         try:
