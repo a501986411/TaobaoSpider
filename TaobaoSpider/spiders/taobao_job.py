@@ -134,7 +134,26 @@ class TaobaoJobSpider(scrapy.Spider):
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             }, callback=self.parse_tb_title_two)
         elif self.type_now == self.type_tm:
-            item['title'] = self.tradition2simple(html.unescape(response.xpath('//h1/text()').extract_first()))
+            param = {
+                "jsv": "2.5.1",
+                "appKey": 12574478,
+                "t": int(time.time() * 1000),
+                # "sign": "08ca47d1bf4ac9d0a8c297fe0980c9b6",
+                "api": "mtop.taobao.detail.getdetail",
+                "v": "6.0",
+                "ttid": "2017@htao_h5_1.0.0",
+                "type": "jsonp",
+                "dataType": "jsonp",
+                "callback": "mtopjsonp1",
+                "data": json.dumps({"exParams": "{\"countryCode\":\"CN\"}", "itemNumId": str(item['goods_id'])})
+            }
+
+            url = "https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?" + parse.urlencode(param).replace(
+                '+', '')
+            item = scrapy.Request(url, meta={'item': item}, headers={
+                "user-agent": choice(self.user_agent_list),
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            }, callback=self.parse_tb_title_two)
         else:
             pass
         return item
