@@ -79,20 +79,21 @@ class TaobaoJobSpider(scrapy.Spider):
 
     def parse(self, response):
         try:
-            item = self.get_item_info(response)
+            # item = self.get_item_info(response)
+            item = self.parse_tb_title_two(response)
             next_url = self.get_url()
             if next_url:
                 yield scrapy.Request(next_url,
                  headers={
-                    "user-agent":choice(self.user_agent_list),
+                    "user-agent": choice(self.user_agent_list),
                      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 }, callback=self.parse)
             yield item
         except:
             next_url = self.get_url()
             if next_url:
-                yield scrapy.Request(next_url,headers={
-                    "user-agent":choice(self.user_agent_list),
+                yield scrapy.Request(next_url, headers={
+                    "user-agent": choice(self.user_agent_list),
                     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                 }, callback=self.parse)
 
@@ -112,7 +113,6 @@ class TaobaoJobSpider(scrapy.Spider):
         item['goods_id'] = self.goods_id_url[response.url]
         monthly_sales = response.xpath('//span[@class="salesNum"]/text()').extract_first().split('：')[1]
         item['monthly_sales'] = monthly_sales
-        item['cover_img'] = self.get_cover_img(response)
         if self.type_now == self.type_tb:
             param = {
                 "jsv": "2.5.1",
@@ -183,12 +183,19 @@ class TaobaoJobSpider(scrapy.Spider):
         return item
 
     def parse_tb_title_two(self, response):
-
-        item = response.meta['item']
+        item = TaobaospiderItem()
+        item['goods_id'] = self.goods_id_url[response.url]
+        # item = response.meta['item']
         try:
             text = response.xpath("//text()").extract_first().replace("mtopjsonp1(","").replace(")","")
             json_text = json.loads(text)
             item['title'] = json_text['data']['item']['title']
+            item['cover_img'] = json_text['data']['item']['images'][0]
+            goods_item = json.loads(json_text['data']['apiStack'][0]['value'])
+            if 'sellCount' in goods_item['item']:
+                item['monthly_sales'] = goods_item['item']['sellCount']
+            else:
+                item['monthly_sales'] = goods_item['item']['vagueSellCount']
         except Exception as e:
             item['title'] = "获取出错"
             logging.error(e)
@@ -223,7 +230,22 @@ class TaobaoJobSpider(scrapy.Spider):
         next_url = ''
         if len(self.goods_id) > 0:
             next_goods_id = self.goods_id.pop()
-            next_url = choice(self.url_prefix) % (str(next_goods_id))
+            # next_url = choice(self.url_prefix) % (str(next_goods_id))
+            param = {
+                "jsv": "2.5.1",
+                "appKey": 12574478,
+                "t": int(time.time() * 1000),
+                # "sign": "08ca47d1bf4ac9d0a8c297fe0980c9b6",
+                "api": "mtop.taobao.detail.getdetail",
+                "v": "6.0",
+                "ttid": "2017@htao_h5_1.0.0",
+                "type": "jsonp",
+                "dataType": "jsonp",
+                "callback": "mtopjsonp1",
+                "data": json.dumps({"exParams": "{\"countryCode\":\"CN\"}", "itemNumId": str(next_goods_id)})
+            }
+            next_url = "https://h5api.m.taobao.com/h5/mtop.taobao.detail.getdetail/6.0/?" + parse.urlencode(param).replace(
+                '+', '')
             self.goods_id_url[next_url] = next_goods_id
             # 设置当前爬取的商品的类型
             self.type_now = self.goods_type[next_goods_id]
