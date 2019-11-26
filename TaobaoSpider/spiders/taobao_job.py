@@ -204,6 +204,9 @@ class TaobaoJobSpider(scrapy.Spider):
                     item['monthly_sales'] = goods_item['item']['vagueSellCount']
         except Exception as e:
             item['title'] = "获取出错"
+            item['cover_img'] = ''
+            item['monthly_sales'] = 0
+            self.goods_id.append(item['goods_id'])
             logging.error(e)
         return item
 
