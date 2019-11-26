@@ -189,13 +189,19 @@ class TaobaoJobSpider(scrapy.Spider):
         try:
             text = response.xpath("//text()").extract_first().replace("mtopjsonp1(","").replace(")","")
             json_text = json.loads(text)
-            item['title'] = json_text['data']['item']['title']
-            item['cover_img'] = json_text['data']['item']['images'][0]
-            goods_item = json.loads(json_text['data']['apiStack'][0]['value'])
-            if 'sellCount' in goods_item['item']:
-                item['monthly_sales'] = goods_item['item']['sellCount']
+            if 'item' not in json_text['data']:
+                item['title'] = '商品不存在'
+                item['cover_img'] = ''
+                item['monthly_sales'] = 0
+                return item
             else:
-                item['monthly_sales'] = goods_item['item']['vagueSellCount']
+                item['title'] = json_text['data']['item']['title']
+                item['cover_img'] = json_text['data']['item']['images'][0]
+                goods_item = json.loads(json_text['data']['apiStack'][0]['value'])
+                if 'sellCount' in goods_item['item']:
+                    item['monthly_sales'] = goods_item['item']['sellCount']
+                else:
+                    item['monthly_sales'] = goods_item['item']['vagueSellCount']
         except Exception as e:
             item['title'] = "获取出错"
             logging.error(e)
