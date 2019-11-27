@@ -30,14 +30,19 @@ class TaobaospiderPipeline(object):
             self.db.connection()
 
     def process_item(self, item, spider):
-        self.save_data(item)
+        if item['result'] != False:
+            self.save_data(item)
+        else:
+            pass
 
     def save_data(self, item):
         sql = "INSERT INTO etb_goods_log (goods_id, title, monthly_sales, cover_img) \
                VALUES (%s, '%s', %s, '%s')" % \
               (item['goods_id'], item['title'], item['monthly_sales'], item['cover_img'])
+
         u_sql = "update etb_goods set title='%s',monthly_sales=%s, cover_img='%s' where goods_id=%s" % \
                 (item['title'], item['monthly_sales'], item['cover_img'], item['goods_id'])
+
         try:
             # 执行sql语句
             self.cursor.execute(sql)
@@ -46,6 +51,7 @@ class TaobaospiderPipeline(object):
 
             self.db.commit()
         except Exception as e:
+
             logging.error(e)
             self.db.rollback()
 

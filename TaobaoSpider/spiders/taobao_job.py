@@ -193,6 +193,7 @@ class TaobaoJobSpider(scrapy.Spider):
                 item['title'] = '商品不存在'
                 item['cover_img'] = ''
                 item['monthly_sales'] = 0
+                item['result'] = False
                 return item
             else:
                 item['title'] = json_text['data']['item']['title']
@@ -202,12 +203,14 @@ class TaobaoJobSpider(scrapy.Spider):
                     item['monthly_sales'] = goods_item['item']['sellCount']
                 else:
                     item['monthly_sales'] = goods_item['item']['vagueSellCount']
+                item['result'] = True
         except Exception as e:
-            item['title'] = "获取出错"
+            item['title'] = '商品不存在'
             item['cover_img'] = ''
             item['monthly_sales'] = 0
+            item['result'] = False
             self.goods_id.append(item['goods_id'])
-            logging.error(e)
+            logging.error("解析出错:" + e)
         return item
 
     def getGoodsId(self):
