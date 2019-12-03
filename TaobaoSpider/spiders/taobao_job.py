@@ -75,6 +75,9 @@ class TaobaoJobSpider(scrapy.Spider):
         # 设置所有需要爬去的商品ID
         # self.start_urls = self.get_start_urls() #设置入口url
         self.goods_id = self.getGoodsId()
+        # 设置商品类型
+        if len(self.goods_id) > 0:
+            self.get_goods_type(self.goods_id)
         self.start_urls = [self.get_url()] #设置入口url
 
     def parse(self, response):
@@ -218,16 +221,27 @@ class TaobaoJobSpider(scrapy.Spider):
         获取需要爬去的url
         :return: url list
         """
-        self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> ""')
+        sql1 = 'select own_goods_id,other_goods_id from etb_goods_relation order by id desc'
+        self.cursor.execute(sql1)
+        # self.cursor.execute('select goods_id,detail_url from etb_goods where goods_id <> ""')
         goods_id_list = []
         for row in self.cursor.fetchall():
-            goods_id_list.append(row['goods_id'])
+            goods_id_list.append(row['own_goods_id'])
+            goods_id_list.append(row['other_goods_id'])
+        goods_id_list = list(set(goods_id_list))
+        return goods_id_list
+
+    def get_goods_type(self, goods_id_list):
+        sql = 'select goods_id,detail_url from etb_goods where goods_id in (%s)' % \
+              (','.join(goods_id_list))
+        cursor = self.db.cursor(cursor = pymysql.cursors.DictCursor)
+        cursor.execute(sql)
+        for row in cursor.fetchall():
             if "tmall" in row['detail_url']:
                 self.goods_type[row['goods_id']] = self.type_tm
             else:
                 self.goods_type[row['goods_id']] = self.type_tb
-        goods_id_list.reverse()
-        return goods_id_list
+
 
     def tradition2simple(self,line):
         # 将繁体转换成简体
