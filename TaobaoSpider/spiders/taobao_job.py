@@ -228,8 +228,28 @@ class TaobaoJobSpider(scrapy.Spider):
         for row in self.cursor.fetchall():
             goods_id_list.append(row['own_goods_id'])
             goods_id_list.append(row['other_goods_id'])
-        goods_id_list = list(set(goods_id_list))
+        follow_store_goods_id = self.get_follow_store_goods_id()
+        goods_id_list = list(set(goods_id_list + follow_store_goods_id))
         return goods_id_list
+
+    def get_follow_store_goods_id(self):
+        sql1 = "select fs.shop_id from etb_user_store us " \
+               "LEFT JOIN etb_follow_store fs on us.follow_store_id = fs.id " \
+               "where us.is_follow = 1"
+        c1 = self.db.cursor(cursor = pymysql.cursors.DictCursor)
+        c1.execute(sql1)
+        shop_ids = []
+        for row in c1.fetchall():
+            shop_ids.append(row['shop_id'])
+        goods_ids = []
+        if len(shop_ids) > 0:
+            sql2 = "select * from etb_goods where shop_id in (%s)" % (','.join('%s' %id for id in shop_ids))
+            c1.execute(sql2)
+            for row1 in c1.fetchall():
+                goods_ids.append(row1['goods_id'])
+        return goods_ids
+
+
 
     def get_goods_type(self, goods_id_list):
         sql = 'select goods_id,detail_url from etb_goods where goods_id in (%s)' % \
