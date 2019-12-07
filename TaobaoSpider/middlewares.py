@@ -145,8 +145,7 @@ class ProxyMiddleware(object):
                     logging.error(response.text)
                     sys.exit(0)
                 else:
-                    json_text = json.loads(response.text)
-                    if "code" in json_text:
+                    if "code" in response.text:
                         proxy_ip = self.get_ip_by_url()
                     else:
                         proxy_ip = response.text.strip()
