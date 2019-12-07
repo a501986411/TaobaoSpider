@@ -13,6 +13,7 @@ import logging
 import configparser
 import time
 import conf
+import json
 class TaobaospiderSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
@@ -144,11 +145,15 @@ class ProxyMiddleware(object):
                     logging.error(response.text)
                     sys.exit(0)
                 else:
-                    proxy_ip = response.text.strip()
-                    self.proxy_cf.set('proxy', 'ip', proxy_ip)
-                    self.proxy_cf.set('proxy', 'get_ip_time', time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
-                    with open(self.cf.get_proxy_conf(), "w+") as f:
-                            self.proxy_cf.write(f)
+                    json_text = json.loads(response.text)
+                    if "code" in json_text:
+                        proxy_ip = self.get_ip_by_url()
+                    else:
+                        proxy_ip = response.text.strip()
+                        self.proxy_cf.set('proxy', 'ip', proxy_ip)
+                        self.proxy_cf.set('proxy', 'get_ip_time', time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
+                        with open(self.cf.get_proxy_conf(), "w+") as f:
+                                self.proxy_cf.write(f)
             else:
                 proxy_ip = ''
                 logging.error('代理IP获取失败1')
