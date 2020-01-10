@@ -120,20 +120,47 @@ class ProxyMiddleware(object):
         self.proxy_cf.read(self.cf.get_proxy_conf(), encoding="utf-8")
 
     def get_proxy_ip(self):
-        proxy_ip = self.proxy_cf.get('proxy', 'ip')
-        if proxy_ip == '':
-            proxy_ip = self.get_ip_by_url()
-
+        proxy_ip = self.proxy_cf.get('proxy_fy', 'ip')
         # 检查代理是否失效
         try:
             proxies = {"http": proxy_ip}
             response = requests.get('http://www.baidu.com', proxies=proxies)
             if response.status_code != 200:
                 logging.debug('代理'+proxy_ip+'失效,重新获取')
-                proxy_ip = self.get_ip_by_url()
+                proxy_ip = self.get_fy_ip()
         except Exception as e:
-            logging.error(e)
-            proxy_ip = self.get_ip_by_url()
+            proxy_ip = self.get_fy_ip()
+        return proxy_ip
+
+    def get_fy_ip(self):
+        """
+        获取飞蚁代理IP
+        返回数据格式：{'code': 100, 'left_ip': 58, 'left_time': 85384, 'number': 1, 'domain': '183.129.244.16', 'port': [38030]}
+        :return: ip:port
+        """
+        proxy_ip = ''
+        url = self.proxy_cf.get('proxy_fy', 'url')
+
+        loop_times = 0
+        sleep_time = 30
+        while True:
+            if loop_times > 10:
+                break
+            loop_times += 1
+            try:
+                response = requests.get(url)
+                res_text = json.loads(response.text)
+                if res_text['code'] != 100:
+                    time.sleep(sleep_time)
+                else:
+                    proxy_ip = res_text['domain'] + ":" + str(res_text['port'][0])
+                    self.proxy_cf.set('proxy_fy', 'ip', proxy_ip)
+                    self.proxy_cf.set('proxy_fy', 'get_ip_time',time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time())))
+                    with open(self.cf.get_proxy_conf(), "w+") as f:
+                        self.proxy_cf.write(f)
+                    break
+            except Exception as e:
+                time.sleep(sleep_time)
         return proxy_ip
 
     def get_ip_by_url(self):
